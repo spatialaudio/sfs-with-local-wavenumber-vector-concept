@@ -1,0 +1,756 @@
+\documentclass[a4paper]{article}
+%
+\usepackage{./soundfield}
+\usepackage[top=2cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+%
+\sfrenewsymbol{cylphi}{\alpha}
+\sfrenewsymbol{cylr}{r}
+%
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+%
+\title{Comparing the Implicit (WFS) and the Explicit (NFCHOA) Solution of the 
+Single Layer Potential in Cylindrical Coordinates}
+%
+\begin{document}
+\maketitle
+%
+\section{HF-Approximation of Helmholtz Integral Equation}
+%
+\begin{equation}
+  \sfnormalsec \cdot \nabla = - \frac{\partial}{\sfcylrsec[prefix=partial]}
+\end{equation}
+%
+\begin{equation}
+  \sfvirtualsource(\sfpos) = 
+    \int_0^{2\pi}
+    \int_{\infty}^{\infty} 
+      \sfgreens(\sfpos-\sfpossec)
+      \frac{
+        \sfvirtualsource[prefix=partial](\sfpossec)
+      }{\sfcylrsec[prefix=partial]}
+      - 
+      \sfvirtualsource(\sfpossec)
+      \frac{
+        \sfgreens(\sfpos-\sfpossec)
+      }{\sfcylrsec[prefix=partial]}
+    \sfzsec[prefix=differential]
+    \sfR
+    \sfcylphisec[prefix=differential]
+\end{equation}
+%
+Insert HF-Frequency Gradient Approximation
+%
+\begin{equation}
+\sfvirtualsource(\sfpos) \approx
+\sfim 
+\int_0^{2\pi}
+\int_{\infty}^{\infty} 
+\left(
+\sfk_{\sfvirtualsource,\sfcylr}(\sfpossec)
++
+\sfk_{\sfgreens,\sfcylr}(\sfpos-\sfpossec)
+\right)
+\sfgreens(\sfpos-\sfpossec)
+\sfvirtualsource(\sfpossec)
+\sfzsec[prefix=differential]
+\sfR
+\sfcylphisec[prefix=differential]
+\end{equation}
+%
+with
+%
+\begin{align}
+\sfk_{\sfvirtualsource,\sfcylr}(\sfpossec) &=
+  \sfunit_{\sfcylr} \cdot \sfkvec_{\sfvirtualsource}(\sfpossec)
+  = - \sfunit_{\sfcylr} \cdot \nabla \phi_{\sfvirtualsource}(\sfpossec)
+\\
+\sfk_{\sfgreens,\sfcylr}(\sfpos-\sfpossec) &=
+\sfunit_{\sfcylr} \cdot \sfkvec_{\sfgreens}(\sfpos-\sfpossec)
+= \sfunit_{\sfcylr} \cdot \nabla_{\sfpossec} 
+\phi_{\sfgreens}(\sfpossec-\sfpos)
+\end{align}
+%
+Phase Term
+%
+\begin{equation}
+\phi(\sfpos,\sfpossec)
+= \phi_{\sfvirtualsource}(\sfpossec) + 
+\phi_{\sfgreens}(\sfpos-\sfpossec)
+\end{equation}
+%
+Condition for Phase Term for SPA w.r.t $\sfzsec$
+%
+\begin{align}
+0 &\overset{!}{=}
+\phi'_{\sfvirtualsource,\sfz}(\sfpossec) +
+\phi'_{\sfgreens,\sfz}(\sfpossec-\sfpos)
+\\
+\rightarrow
+\sfk_{\cdot,\sfz}(\sfpossec)
+&\overset{!}{=}
+\sfk_{\cdot,\sfz}(\sfpos-\sfpossec)
+= \frac{\sfz - \sfzsec}{|\sfpos-\sfpossec|}
+\end{align}
+%
+The synthesis is limited to the horizontal plane, i.e. $\sfz=0$. Virtual sound 
+fields are considered, which do only propagate in the horizontal direction, 
+i.e. $\sfk_{\cdot,\sfz}(\sfpossec) = 0$ for $\sfzsec = 0$. Hence, $\sfzsec^*=0$
+is a stationary point independent of the actual sound field.\\
+%
+SPA w.r.t $\sfzsec$
+%
+\begin{align}\nonumber
+\sfvirtualsource(\sfpos) \approx&
+\int_0^{2\pi} 
+\sqrt{
+  \frac{2\pi}{|%
+    \phi''_{\sfvirtualsource,\sfz\sfz}(\sfpossec^*)
+    +
+    \phi''_{\sfgreens,\sfz\sfz}(\sfpos-\sfpossec^*)
+  |}
+}
+\\&\cdot
+\left(
+\sfk_{\sfvirtualsource,\sfcylr}(\sfpossec^*)
++
+\sfk_{\sfgreens,\sfcylr}(\sfpos-\sfpossec^*)
+\right)
+\sfvirtualsource(\sfpossec^*)
+\sfgreens(\sfpos-\sfpossec^*)
+\sfR
+\sfcylphisec[prefix=differential]
+\end{align}
+%
+Condition for Phase Term for SPA w.r.t $\sfcylphisec$
+%
+\begin{align}
+0 &\overset{!}{=}
+\phi'_{\sfvirtualsource,\sfcylphi}(\sfpossec) +
+\phi'_{\sfgreens,\sfcylphi}(\sfpossec-\sfpos)
+\\
+\rightarrow
+\sfk_{\cdot,\sfcylphi}(\sfpossec)
+&\overset{!}{=}
+\sfk_{\cdot,\sfcylphi}(\sfpos-\sfpossec)
+\rightarrow
+\sfcylphisec^*(\sfpos)
+\end{align}
+%
+Derivative of the SPA Condition w.r.t to $\sfcylphi$ (important later)
+%
+\begin{align}
+0 &=
+\frac{\partial}{\sfcylphi[prefix=partial]}
+\left(
+\phi'_{\sfvirtualsource,\sfcylphi}(\sfpossec^*(\sfpos)) +
+\phi'_{\sfgreens,\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+\right)
+\\&=
+\frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)) +
+\left(
+\frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+- 1
+\right)
+\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+\\
+\rightarrow
+\frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+&=
+\frac{%
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+}{
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)) +
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+}
+\end{align}
+%
+SPA w.r.t $\sfcylphisec$
+%
+\begin{align}\nonumber
+\sfvirtualsource(\sfpos) \approx&
+\frac{1}{
+  \sqrt{
+  |%
+    \phi''_{\sfvirtualsource,\sfz\sfz}(\sfpossec^*(\sfpos))
+    +
+    \phi''_{\sfgreens,\sfz\sfz}(\sfpos-\sfpossec^*(\sfpos))
+  |}
+}
+\frac{1}{
+  \sqrt{
+  |%
+    \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos))
+    +
+    \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpos-\sfpossec^*(\sfpos))
+  |}
+}
+\\&\cdot
+\left(
+\sfk_{\sfvirtualsource,\sfcylr}(\sfpossec^*(\sfpos))
++
+\sfk_{\sfgreens,\sfcylr}(\sfpos-\sfpossec^*(\sfpos))
+\right)
+\sfvirtualsource(\sfpossec^*(\sfpos))
+\sfgreens(\sfpos-\sfpossec^*(\sfpos))
+2\pi\sfR
+\end{align}
+%
+Due to the local dispersion 
+%
+\begin{align}\nonumber
+\sfvirtualsource(\sfpos) \approx&
+\frac{1}{
+  \sqrt{
+    |%
+    \phi''_{\sfvirtualsource,\sfz\sfz}(\sfpossec^*(\sfpos))
+    +
+    \phi''_{\sfgreens,\sfz\sfz}(\sfpos-\sfpossec^*(\sfpos))
+    |}
+}
+\frac{1}{
+  \sqrt{
+    |%
+    \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos))
+    +
+    \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpos-\sfpossec^*(\sfpos))
+    |}
+}
+\\&\cdot
+\sfk_{\sfvirtualsource,\sfcylr}(\sfpossec^*(\sfpos))
+\sfvirtualsource(\sfpossec^*(\sfpos))
+\sfgreens(\sfpos-\sfpossec^*(\sfpos))
+4\pi\sfR
+\end{align}
+%
+This relates these virtual sound field at $\sfpos$ with the virtual sound field 
+at $\sfpossec^*(\sfpos)$. 
+%
+\begin{align}
+\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpos)
+  \approx&
+  \frac{\partial^2}{\sfcylphi[prefix=partial]^2}
+  \left[
+    \phi_{\sfvirtualsource}(\sfpossec^*(\sfpos)) +
+    \phi_{\sfgreens}(\sfpos-\sfpossec^*(\sfpos))
+  \right]
+\\=&
+  \frac{\partial}{\sfcylphi[prefix=partial]}
+  \left[
+    \frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+    \phi'_{\sfvirtualsource,\sfcylphi}(\sfpossec^*(\sfpos)) +
+    \left(
+    \frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+    - 1
+    \right)
+  \phi'_{\sfgreens,\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+  \right]
+\\=&
+  \frac{\partial^2 \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]^2}
+  \underbrace{
+    \left[
+      \phi'_{\sfvirtualsource,\sfcylphi}(\sfpossec^*(\sfpos)) +
+      \phi'_{\sfgreens,\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+    \right]
+  }_{=0}
+\\&+
+  \left[
+    \left(
+    \frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+    \right)^2
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)) +
+  \left(
+  \frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+  - 1
+  \right)^2
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+  \right]
+\end{align}
+%
+\begin{align}
+\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpos)
+  &\approx
+  \left(
+  \frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+  \right)^2
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)) -
+  \left(
+  \frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+  - 1
+  \right)
+  \frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos))
+\\&=
+\frac{\partial \sfcylphisec^*(\sfpos)}{\sfcylphi[prefix=partial]}
+\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos))
+\\&=
+\frac{
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos))
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+}{
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)) +
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+}
+\end{align}
+%
+\begin{align}
+\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos))
+\approx
+\frac{
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpos)
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos)
+}{
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos) -
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpos)
+}
+\end{align}
+%
+\begin{align}\nonumber
+\sfvirtualsource(\sfpos) \approx&
+\frac{1}{
+  \sqrt{
+    |%
+    \phi''_{\sfvirtualsource,\sfz\sfz}(\sfpossec^*(\sfpos))
+    +
+    \phi''_{\sfgreens,\sfz\sfz}(\sfpos-\sfpossec^*(\sfpos))
+    |}
+}
+\sqrt{
+  \left|
+  \frac{
+    \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpossec^*(\sfpos)-\sfpos) -
+    \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfpos)
+  }{
+    (\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfpos-\sfpossec^*(\sfpos)))^2
+  }
+  \right|
+}
+\\&\cdot
+\sfk_{\sfvirtualsource,\sfcylr}(\sfpossec^*(\sfpos))
+\sfvirtualsource(\sfpossec^*(\sfpos))
+\sfgreens(\sfpos-\sfpossec^*(\sfpos))
+4\pi\sfR
+\end{align}
+%
+\section{HF-Approximation of Explicit Solution}
+%
+\subsection{Integral Representation of Circular Harmonics Transform}
+%
+\begin{equation}
+\sfdriving(\sfpossec) =
+  \sum_{\sfcylm = -\infty}^{\infty}
+    \sfdriving[prefix=cht,subscript=cylm]
+    \sfeuler^{+\sfim \sfcylm \sfcylphisec}
+\end{equation}
+%
+\begin{equation}
+\sfdriving(\sfpossec) =
+  \int_{-\infty}^{\infty}
+    \sum_{\sfcylm = -\infty}^{\infty}
+      \sfdriving[prefix=cht](\sfcylmu)
+      \delta(\sfcylmu - \sfcylm)
+      \sfeuler^{+\sfim \sfcylmu \sfcylphisec}
+  \sfcylmu[prefix=differential]
+\end{equation}
+%
+Using Fourier Series of Dirac Comb
+%
+\begin{equation}
+\sfdriving(\sfpossec) =
+  \int_{-\infty}^{\infty}
+    \sum_{\eta = -\infty}^{\infty}
+      \sfdriving[prefix=cht](\sfcylmu)
+      \sfeuler^{-\sfim 2\pi \sfcylmu \eta}
+      \sfeuler^{+\sfim \sfcylmu \sfcylphisec}
+  \sfcylmu[prefix=differential]
+\end{equation}
+%
+\begin{equation}
+\sfdriving(\sfpossec) =
+  \sum_{\eta = -\infty}^{\infty}
+    \int_{-\infty}^{\infty}
+      \sfdriving[prefix=cht](\sfcylmu)
+      \sfeuler^{+\sfim \sfcylmu (\sfcylphisec-2\pi \eta)}
+    \sfcylmu[prefix=differential]
+\end{equation}
+%
+Corresponding Forward Transform
+%
+\begin{equation}
+\sfdriving[prefix=cht](\sfcylmu) =
+  \int_{0}^{2\pi}
+    \sfdriving(\sfpossec)
+    \sfeuler^{-\sfim \sfcylmu \sfcylphisec}
+  \sfcylphisec[prefix=differential]
+\end{equation}
+%
+\subsection{Explicit Solution}
+%
+\begin{equation}
+\sfvirtualsource(\sfpos) =
+  \int_0^{2\pi}
+    \sfdriving(\sfpossec)
+    \sfgreens(\sfpos-\sfpossec)
+  \sfR
+  \sfcylphisec[prefix=differential]
+\end{equation}
+%
+Apply Forward Transform
+%
+\begin{align}
+\sfvirtualsource[prefix=cht](\sfcylmu,\sfcylr)
+=
+\int_0^{2\pi}
+\sfdriving(\sfpossec)
+\int_0^{2\pi}
+\sfgreens(\sfpos-\sfpossec)
+\sfeuler^{-\sfim \sfcylmu \sfcylphi}
+\sfcylphi[prefix=differential]
+\sfR
+\sfcylphisec[prefix=differential]
+\end{align}
+%
+\begin{align}
+\sfvirtualsource[prefix=cht](\sfcylmu)
+=
+\int_0^{2\pi}
+\sfdriving(\sfpossec)
+\sfeuler^{+\sfim \sfcylmu \sfcylphisec}
+\sfR
+\sfcylphisec[prefix=differential]
+\int_0^{2\pi}
+\sfgreens(\sfpos-[R,0,0]^{\mathrm T})
+\sfeuler^{-\sfim \sfcylmu \sfcylphi}
+\sfcylphi[prefix=differential]
+\end{align}
+%
+\begin{align}
+\sfvirtualsource[prefix=cht](\sfcylmu,\sfcylr))
+=
+2\pi \sfR\,
+\sfdriving[prefix=cht](\sfcylmu)
+\sfgreens[prefix=cht](\sfcylmu,\sfcylr,\sfR)
+\end{align}
+%
+\begin{equation}
+\sfdriving[prefix=cht](\sfcylmu) =
+\frac{1}{2\pi \sfR}\,
+\frac{%
+  \sfvirtualsource[prefix=cht](\sfcylmu,\sfcylr[subscript=ref])
+}{%
+  \sfgreens[prefix=cht](\sfcylmu,\sfcylr[subscript=ref],R)
+}
+\end{equation}
+%
+\subsection{HF-Approximation of Forward Transforms}
+%
+\subsubsection{Virtual Source}
+%
+Forward Transform
+%
+\begin{equation}
+\sfvirtualsource[prefix=cht](\sfcylmu,\sfcylr)=
+\int_0^{2\pi}
+  \sfvirtualsource(\sfcylphi,\sfcylr)
+  \sfeuler^{-\sfim \sfcylmu \sfcylphi}
+\sfcylphi[prefix=differential]
+\end{equation}
+%
+Phase Term
+%
+\begin{equation}
+  \phi(\sfcylphi,\sfcylr)
+  = \phi_{\sfvirtualsource}(\sfcylphi) - \sfcylmu \sfcylphi
+\end{equation}
+%
+SPA Condition for Phase Term
+%
+\begin{align}
+\phi'_{\sfvirtualsource,\sfcylphi}(\sfcylphi,\sfcylr) 
+\overset{!}{=}
+  \sfcylmu
+  \rightarrow 
+  \sfcylphi^*_{\sfvirtualsource} = 
+  \sfcylphi^*_{\sfvirtualsource} (\sfcylmu,\sfcylr)
+\end{align}
+%
+SPA of Virtual Source
+%
+\begin{equation}
+\sfvirtualsource[prefix=cht](\sfcylmu)\approx
+\sqrt{
+  \frac{2\pi}{
+    |\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)|
+  }
+}
+\sfvirtualsource(\sfcylphi^*_{\sfvirtualsource},\sfcylr)
+\sfeuler^{-\sfim \sfcylmu \sfcylphi^*_{\sfvirtualsource}}
+\end{equation}
+%
+Derivative of the SPA Condition w.r.t to $\sfcylmu$ (important later)
+% 
+\begin{align}
+\frac{\partial \sfcylphi^*_{\sfvirtualsource}}{\partial \sfcylmu}
+\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource})
+\overset{!}{=}
+1
+\rightarrow 
+\frac{\partial \sfcylphi^*_{\sfvirtualsource,\sfcylr}}{\partial \sfcylmu} = 
+\frac{1}{\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)}
+\end{align}
+%
+\subsubsection{Green's Function}
+%
+Forward Transform
+%
+\begin{equation}
+\sfgreens[prefix=cht](\sfcylmu,\sfcylr)=
+\int_0^{2\pi}
+\sfgreens(\sfcylphi,\sfcylr)
+\sfeuler^{-\sfim \sfcylmu \sfcylphi}
+\sfcylphi[prefix=differential]
+\end{equation}
+%
+Phase Term
+%
+\begin{equation}
+\phi(\sfcylphi,\sfcylr,\sfR)
+= \phi_{\sfgreens}(\sfcylphi,\sfcylr,\sfR) - \sfcylmu \sfcylphi
+\end{equation}
+%
+SPA Condition for Phase Term
+%
+\begin{align}
+\phi'_{\sfgreens,\sfcylphi}(\sfcylphi,\sfcylr,\sfR) 
+\overset{!}{=}
+\sfcylmu
+\rightarrow 
+\sfcylphi^*_{\sfgreens} = 
+\sfcylphi^*_{\sfgreens} (\sfcylmu,\sfcylr,\sfR)
+\end{align}
+%
+SPA for Green's Function
+%
+\begin{equation}
+\sfgreens[prefix=cht](\sfcylmu)\approx
+\sqrt{
+  \frac{2\pi}{
+    |\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)|
+  }
+}
+\sfgreens(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)
+\sfeuler^{-\sfim \sfcylmu \sfcylphi^*_{\sfgreens}}
+\end{equation}
+%
+Derivative of the SPA Condition w.r.t to $\sfcylmu$ (important later)
+% 
+\begin{align}
+\frac{\partial \sfcylphi^*_{\sfgreens}}{\partial \sfcylmu}
+\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)
+\overset{!}{=}
+1
+\rightarrow 
+\frac{\partial \sfcylphi^*_{\sfgreens}}{\partial \sfcylmu} = 
+\frac{1}{\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)}
+\end{align}
+%
+\subsubsection{Driving Function}
+%
+\begin{equation}
+\sfdriving[prefix=cht](\sfcylmu) \approx
+\sqrt{
+  \frac{
+    |\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)|
+  }{
+    |\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)|
+  }
+}
+\frac{%
+  \sfvirtualsource(\sfcylphi^*_{\sfvirtualsource},\sfcylr)
+}{
+  \sfgreens(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)
+}
+\sfeuler^{+\sfim \sfcylmu 
+(\sfcylphi^*_{\sfgreens}-\sfcylphi^*_{\sfvirtualsource})}
+\end{equation}
+%
+\subsection{HF-Approximation of Inverse Transform}
+%
+\begin{equation}
+\sfdriving(\sfpossec) \approx
+  \sum_{\eta = -\infty}^{\infty}
+    \int_{-\infty}^{\infty}
+      \sqrt{
+        \frac{
+          |\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)|
+        }{
+          |\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)|
+        }
+      }
+      \frac{%
+        \sfvirtualsource(\sfpos^*_{\sfvirtualsource})
+      }{
+        \sfgreens(\sfpos^*_{\sfgreens})
+      }
+      \sfeuler^{+\sfim \sfcylmu 
+        (\sfcylphi^*_{\sfgreens}-\sfcylphi^*_{\sfvirtualsource} 
+        +\sfcylphisec-2\pi \eta)}
+  \sfcylmu[prefix=differential]
+\end{equation}
+%
+Phase Term
+%
+\begin{equation}
+\phi(\sfcylmu)
+= 
+\phi_{\sfvirtualsource}(\sfcylphi^*_{\sfvirtualsource},\sfcylr,\sfR)
+-\phi_{\sfgreens}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR) 
++
+\sfcylmu 
+(\sfcylphi^*_{\sfgreens}-\sfcylphi^*_{\sfvirtualsource} 
++\sfcylphisec-2\pi \eta)
+\end{equation}
+%
+Condition for Phase Term
+%
+\begin{align}\nonumber
+  0 \overset{!}{=} 
+  \frac{\partial \phi(\sfcylmu)}{\partial \sfcylmu} &=
+  \frac{\partial \sfcylphi^*_{\sfvirtualsource}}{\partial \sfcylmu}
+  \underbrace{
+    \left[
+    \phi'_{\sfvirtualsource,\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr,\sfR)
+    - \sfcylmu 
+    \right]
+  }_{=0}
+  -
+  \frac{\partial \sfcylphi^*_{\sfgreens}}{\partial \sfcylmu}
+  \underbrace{
+    \left[
+    \phi'_{\sfgreens,\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR) 
+    - \sfcylmu 
+    \right]
+  }_{=0}
+\\&
++
+(\sfcylphi^*_{\sfgreens}-\sfcylphi^*_{\sfvirtualsource} 
++\sfcylphisec-2\pi \eta)
+\rightarrow \sfcylmu^*(\sfcylphisec)
+\\&
+\end{align}
+%
+Skipping the intermediate Variable $\sfcylmu$
+%
+\begin{equation}
+%
+\sfcylphi^*_{\sfgreens}(\sfcylphisec) \overset{!}{=}
+\sfcylphi^*_{\sfvirtualsource}(\sfcylphisec) - \sfcylphisec
+%
+\end{equation}
+%
+Second-Order Derivative of Phase Term
+%
+\begin{align}\nonumber
+\frac{\partial^2 \phi(\sfcylmu)}{\partial \sfcylmu^2} =& 
+\frac{\partial^2 \sfcylphi^*_{\sfvirtualsource}}{\partial \sfcylmu^2}
+\underbrace{
+  \left[
+  \phi'_{\sfvirtualsource,\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr,\sfR)
+  - \sfcylmu 
+  \right]
+}_{=0}
++
+\left(\frac{\partial \sfcylphi^*_{\sfvirtualsource}}{\partial \sfcylmu}\right)^2
+\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr,\sfR)
+-
+2
+\frac{\partial \sfcylphi^*_{\sfvirtualsource}}{\partial \sfcylmu}
+\\-&
+\frac{\partial^2 \sfcylphi^*_{\sfgreens}}{\partial \sfcylmu^2}
+\underbrace{
+  \left[
+  \phi'_{\sfgreens,\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR) 
+  - \sfcylmu 
+  \right]
+}_{=0}
+-
+\left(\frac{\partial \sfcylphi^*_{\sfgreens}}{\partial \sfcylmu}\right)^2
+\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR) 
++
+2
+\frac{\partial \sfcylphi^*_{\sfgreens}}{\partial \sfcylmu}
+\end{align}
+%
+\begin{align}\nonumber
+\left.\frac{\partial^2 \phi(\sfcylmu)}{\partial 
+\sfcylmu^2}\right|_{\sfcylmu=\sfcylmu^*} =& 
+-\frac{1}{\phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)}
++\frac{1}{\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr)}
+=
+\frac{
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr)
+  -
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)
+}{
+  \phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr)
+  \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)
+}
+\end{align}
+%
+\begin{align}
+\sfdriving(\sfpossec) &\approx
+  \sqrt{
+    \frac{
+      (\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr))^2
+     }{
+      |\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfgreens},\sfcylr)
+      -
+      \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*_{\sfvirtualsource},\sfcylr)|
+    }
+  }
+  \frac{%
+    \sfvirtualsource(\sfcylphi^*_{\sfvirtualsource},\sfcylr)
+  }{
+    \sfgreens(\sfcylphi^*_{\sfgreens},\sfcylr,\sfR)
+  }
+\end{align}
+%
+\begin{align}
+\sfdriving(\sfpossec) \approx
+  \sqrt{
+  \frac{
+      (\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*(\sfcylphisec)
+       - \sfcylphisec,\sfcylr))^2
+    }{
+      |\phi''_{\sfgreens,\sfcylphi\sfcylphi}(\sfcylphi^*(\sfcylphisec)
+       - \sfcylphisec,\sfcylr)
+      -
+      \phi''_{\sfvirtualsource,\sfcylphi\sfcylphi}(\sfcylphi^*(\sfcylphisec),\sfcylr)|
+    }
+  }
+  \frac{%
+    \sfvirtualsource(\sfcylphi^*(\sfcylphisec),\sfcylr)
+  }{
+    \sfgreens(\sfcylphi^*(\sfcylphisec)
+    - \sfcylphisec,\sfcylr,\sfR)
+  }
+\end{align}
+%
+Inserting HF approximation of HIE
+%
+\begin{align}\nonumber
+\sfdriving(\sfpossec) \approx
+\frac{1}{
+  \sqrt{
+    |%
+    \phi''_{\sfvirtualsource,\sfz\sfz}(\sfpossec^*(\sfpos))
+    +
+    \phi''_{\sfgreens,\sfz\sfz}(\sfpos-\sfpossec^*(\sfpos))
+    |}
+}
+\sfk_{\sfvirtualsource,\sfcylr}(\sfpossec)
+\sfvirtualsource(\sfpossec)
+4\pi\sfR
+\end{align}
+%
+\end{document}
