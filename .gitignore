@@ -1,1 +1,7 @@
 *checkpoint.ipynb
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+nfc_hoa-vs-wfs.pdf
