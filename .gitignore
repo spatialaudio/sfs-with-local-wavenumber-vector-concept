@@ -4,4 +4,8 @@
 *.fls
 *.log
 *.synctex.gz
+*.bbl
+*.blg
 nfc_hoa-vs-wfs.pdf
+nfc_hoa-vs-wfs_CylCoord.pdf
+
