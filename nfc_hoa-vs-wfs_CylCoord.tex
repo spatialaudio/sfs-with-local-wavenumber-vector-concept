@@ -1,0 +1,647 @@
+\documentclass[a4paper,BCOR=15mm,10pt,twoside]{scrartcl}
+\usepackage[utf8]{inputenc}       
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\KOMAoptions{DIV=14}
+\usepackage[english]{babel}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{amsmath}
+\newcommand{\fscom}[2][red]{\textcolor{#1}{#2}}  %for comments in red
+\newcommand\e{\mathrm{e}}  % euler
+\newcommand\im{\mathrm{j}}  % imaginary unit
+\newcommand\fsd{\mathrm{d}}  % der/int operator
+\newcommand\wc{\frac{\omega}{c}}  % omega / c
+\newcommand\jwc{\im\,\frac{\omega}{c}}  % j omega / c
+\newcommand\azx{\alpha}  % azimuth [0,2pi]
+\newcommand\elx{\vartheta}  % colatitude [0,pi]...[north, south] pole
+\renewcommand{\vec}[1]{\mathbf{#1}}  % vector = bold
+\newcommand\unitn{\vec{n}}  % unit inward normal
+\newcommand{\norm}[1]{|#1|}  %magnitude (length) of vector
+
+\title{Comparing the Implicit (WFS) and the Explicit (NFC-HOA) Solution of the 
+2.5D Single Layer Potential (SLP) in Cylindrical Coordinates}
+\author{Frank Schultz}
+%
+\begin{document}
+\maketitle
+%
+This is a recalculation and double check of Fiete Winter's \url{nfc_hoa-vs-wfs.tex} of commit \url{7f2221a} in \url{https://github.com/spatialaudio/sfs-with-local-wavenumber-vector-concept}.
+
+We omit the $\omega$-dependence in the (local) wave vectors, phases, sound fields and so on. The vector scalar product notation is $\vec{a} \cdot \vec{b}$.
+%
+We use $\e^{+\im \omega t}$ time convention, imaginary unit $\im$. The (local) wave vectors indicate propagating direction with convention $\vec{k} = - \nabla \phi$.
+%
+The first SPA w.r.t. height is given very detailed to recheck the unified WFS framework in tutorial style.
+
+\section{High Frequency Approximation of Helmholtz Integral Equation in Cylindrical Coordinates, WFS}
+
+\subsection{Synthesis Integral and Approximation}
+
+A position vector on the SSD is described by (cartesian, cylindrical, spherical) vector
+\begin{align}
+\vec{x}_0 = (x_0,y_0,z_0)^\mathrm{T} = (r_0,\azx_0, z_0)^\mathrm{T} = (r_0,\azx_0, \elx_0)^\mathrm{T}
+\end{align}
+using $\azx$...azimuth, $\elx$...colatitude, $z$...height, $r$...radius.
+A position vector within the cylinder (i.e. listening space with $r<r_0$) is denoted by $\vec{x}$.
+%
+For the Helmholtz Integral Equation (HIE) the normal derivative w.r.t. inward normal is required.
+It reads
+\begin{align}
+\vec{n}_0 \cdot \nabla = -\frac{\partial}{\partial r} \qquad \vec{n}_0 \cdot \nabla|_{r=r_0} = -\frac{\partial}{\partial r}|_{r=r_0}.
+\end{align}
+%
+The HIE for a cylindrical SSD with radius $R$ is then given as
+\begin{align}
+S(\vec{x}) = \int\limits_{0}^{2\pi}\int\limits_{-\infty}^{+\infty}
+\left[
+G(\vec{x}-\vec{x}_0) \frac{\partial S(\vec{x})}{\partial r}|_{r=r_0} 
+-S(\vec{x_0}) \frac{\partial G(\vec{x}-\vec{x}_0)}{\partial r_0}\cdot \unitn(\vec{x}_0)
+\right]
+\fsd z_0 \, R \, \fsd \azx_0.
+\end{align}
+%
+We utilize the high-frequency approximation (cf. \cite[(57),(58)]{Firtha2018}, \cite[(3.42)]{Firtha2018Diss}, \cite[(2.36)]{Schultz2016Diss})
+\begin{align}
+\label{eq:HIE_FAR1}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi}\int\limits_{-\infty}^{+\infty}
+\im 
+\left[
+k_{S,r}(\vec{x_0}) + k_{G,r}(\vec{x} - \vec{x_0})
+\right]
+S(\vec{x_0})\,G(\vec{x}-\vec{x}_0)
+\fsd z_0 \, R \, \fsd \azx_0.
+\end{align}
+%
+For a target field of a point source and 3D Green's freefield function we get (cf. \cite[Sec. 2.2.1]{Schultz2016Diss})
+\begin{align}
+&k_{S,r}(\vec{x_0}) = \wc \cos(\azx_S)\qquad
+&k_{G,r}(\vec{x_0}) = \wc \cos(\azx_G)\\
+&\cos\azx_S = \frac{\vec{x_0}-\vec{x}_S}{|\vec{x_0}-\vec{x}_S|} \cdot \vec{n}(\vec{x}_0)\qquad
+&\cos\azx_G = \frac{\vec{x}-\vec{x}_0}{\norm{\vec{x}-\vec{x}_0}} \cdot {\unitn(\vec{x}_0)}.
+\end{align}
+%
+More generally by splitting the scalar product and introducing the local wave vector concept (cf. \cite[Sec. 3.1.1]{Firtha2018Diss}) of arbitrary sound fields we get
+\begin{align}
+k_{S,r}(\vec{x_0}) =& \vec{k}_S(\vec{x}_0) \cdot \unitn(\vec{x}_0) = - \nabla_{\vec{x}_0}\phi_S(\vec{x}_0) \cdot \unitn(\vec{x}_0)\\
+k_{G,r}(\vec{x_0}) =& \vec{k}_G(\vec{x}-\vec{x}_0) \cdot \unitn(\vec{x}_0) = -\nabla_\vec{x}\phi_G(\vec{x}-\vec{x}_0) \cdot \unitn(\vec{x}_0) = + \nabla_{\vec{x}_0} \phi_G(\vec{x}_0-\vec{x}) \cdot \unitn(\vec{x}_0)\\
+k_{G,r}(\vec{x_0}) =& \vec{k}_G(\vec{x}-\vec{x}_0) \cdot \unitn(\vec{x}_0) = -\nabla_\vec{x}\phi_G(\vec{x}_0-\vec{x}) \cdot \unitn(\vec{x}_0) = + \nabla_{\vec{x}_0} \phi_G(\vec{x}-\vec{x}_0) \cdot \unitn(\vec{x}_0).
+\end{align}
+Note the invariance of $\vec{x}_0-\vec{x}$ and $\vec{x}-\vec{x}_0$ in the argument of Green's function for pure evaluation, but the difference of the derivative w.r.t. $\vec{x}_0$ and $\vec{x}$. So be careful when deriving phase terms.
+%
+
+By splitting the involved sound fields into polar form
+\begin{align}
+S(\vec{x}) =& A_S(\vec{x}) \, \e^{\im \phi_S(\vec{x})}\\
+G(\vec{x}-\vec{x}_0) =& A_G(\vec{x}-\vec{x}_0) \, \e^{\im \phi_G(\vec{x}-\vec{x}_0)}
+\end{align}
+%
+we have access to the complete phase term of the integral \eqref{eq:HIE_FAR1}
+%
+\begin{align}
+\phi(\vec{x}, \vec{x_0}) = \phi_{S}(\vec{x})  + \phi_{G}(\vec{x}-\vec{x}_0),
+\end{align}
+%
+for which the stationary phase point $\vec{x}_0^*$ is to be found in the following.
+
+\subsection{Stationary Phase Approximation w.r.t. Height}
+In order to reduce the dimensionality of \eqref{eq:HIE_FAR1}, a first stationary phase approximation (SPA) w.r.t. $z_0$ is performed.
+This then reduces the infinite SSD cylinder to a circle, here in $xy$-plane.
+For that we need the derivatives and conditions of the aforementioned phase term
+%
+\begin{align}
+\frac{\partial \phi(\vec{x}, \vec{x_0})}{\partial z_0}\bigg|_{\vec{x}_0=\vec{x}_0^*} \stackrel{!}{=} 0 \qquad
+\frac{\partial^2 \phi(\vec{x}, \vec{x_0})}{\partial z_0^2}\bigg|_{\vec{x}_0=\vec{x}_0^*} \neq 0
+\end{align}
+%
+\subsubsection{First Derivative of Phase w.r.t. Height}
+%
+\begin{align}
+\label{eq:PhaseSGDer1Condition}
+\frac{\partial \phi(\vec{x}, \vec{x_0})}{\partial z_0} = \frac{\partial \phi_{S}(\vec{x})}{\partial z_0}   + \frac{\partial \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0} \stackrel{!}{=} 0
+\end{align}
+%
+The phase term and its derivative for the primary point source located at $\vec{x}_S$ radiating the primary sound field is given as
+\begin{align}
+\phi_{S}(\vec{x}) = -\wc |\vec{x}_0-\vec{x}_S|\qquad \frac{\partial \phi_{S}(\vec{x})}{\partial z_0} = - \wc \frac{z_0-z_S}{|\vec{x}_0-\vec{x}_S|} = + \wc \frac{z_S-z_0}{|\vec{x}_S-\vec{x}_0|}
+\end{align}
+at the SSD.
+The phase term and its derivative for the Green's function at $\vec{x_0}$ w.r.t. to listening point $\vec{x}$ is given as
+\begin{align}
+\phi_{G}(\vec{x}) = -\wc |\vec{x}-\vec{x}_0| \qquad \frac{\partial \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0} = +\wc \frac{z-z_0}{|\vec{x}-\vec{x}_0|} = -\wc \frac{z_0-z}{|\vec{x}_0-\vec{x}|}
+\end{align}
+The local wave vectors in general vector notation are given with $\vec{k} = \stackrel{!}{-} \nabla \phi$ from above phases, i.e.
+\begin{align}
+\label{eq:WaveVectorsSPA1}
+\vec{k}_S = + \wc \frac{\vec{x}_0-\vec{x}_S}{|\vec{x}_0-\vec{x}_S|}
+\qquad \vec{k}_G^I = + \wc \frac{\vec{x}_0-\vec{x}}{|\vec{x}_0-\vec{x}|}
+\qquad \vec{k}_G \stackrel{!}{=} - \vec{k}_G^I = - \wc \frac{\vec{x}_0-\vec{x}}{|\vec{x}_0-\vec{x}|} = + \wc \frac{\vec{x}-\vec{x}_0}{|\vec{x}-\vec{x}_0|}.
+\end{align}
+We see that $\vec{k}_S $ is a vector with direction from $\vec{x}_S$ to $\vec{x}_0$ and $\vec{k}_G^I$ is a vector with direction from $\vec{x}$ to $\vec{x}_0$. The introduced (help) vector 
+$\vec{k}_G$ is a vector from $\vec{x}_0$ to $\vec{x}$ (opposed to $\vec{k}_G^I $) and will be useful later.
+
+Similarly to \eqref{eq:PhaseSGDer1Condition}, written with local wave vectors, the SPA demands
+\begin{align}
+-\vec{k}_S - \vec{k}_G^I \stackrel{!}{=} 0
+\end{align}
+in the stationary point. This is achieved when $\vec{k}_S $ and $\vec{k}_G^I$ are opposed to each other, respectively coincidence
+\begin{align}
+\vec{k}_S \stackrel{!}{=} - \vec{k}_G^I = + \vec{k}_G
+\end{align}
+holds, where $\vec{k}_G$ becomes helpful, since from above equation we can state that $\vec{k}_S $ and $\vec{k}_G$ are coincident in the stationary point. Firtha uses the notation $\vec{k}_G = \vec{k}_G(\vec{x}-\vec{x}_0^*(\vec{x}))$ and $\vec{k}^I_G=\vec{k}_G(\vec{x}_0^*(\vec{x})-\vec{x})$ with reciprocity mindset (i.e. take $\partial / \partial z$ for Green's function to obtain $\vec{k}_G$ directly, see above) and also ends up in \cite[(7)]{Firtha2018}, \cite[(3.34)]{Firtha2018Diss}, \cite[Fig. 3.7]{Firtha2018Diss}
+\begin{align}
+\label{eq:SPA_condition_z}
+\vec{k}_S(\vec{x}_0^*(\vec{x})) = \vec{k}_G(\vec{x}-\vec{x}_0^*(\vec{x})) = -\vec{k}_G(\vec{x}_0^*(\vec{x})-\vec{x}).
+\end{align}
+It is worth noting
+\begin{align}
+\label{eq:PntSrcDerivEqualities}
+(\frac{\partial \phi(\vec{x}-\vec{x}_0)}{\partial z_0} = & \frac{\partial \phi(\vec{x}_0-\vec{x})}{\partial z_0}) \neq
+(\frac{\partial \phi(\vec{x}-\vec{x}_0)}{\partial z} = \frac{\partial \phi(\vec{x}_0-\vec{x})}{\partial z})
+\\
+\frac{\partial^2 \phi(\vec{x}-\vec{x}_0)}{\partial z_0^2} =& \frac{\partial^2 \phi(\vec{x}_0-\vec{x})}{\partial z_0^2} = \frac{\partial^2 \phi(\vec{x}-\vec{x}_0)}{\partial z^2} = \frac{\partial^2 \phi(\vec{x}_0-\vec{x})}{\partial z^2}\nonumber
+\end{align} 
+for a point source (\fscom{this holds in general?}).
+%
+To proceed, we introduce the shortened notation 
+%
+\begin{align}
+&\phi'_{S,z}(\vec{x}_0^*(\vec{x})) = \frac{\partial \phi_{S}(\vec{x})}{\partial z_0}\bigg|_{\vec{x}_0=\vec{x}_0^*}\qquad
+&\phi'_{G,z}(\vec{x}-\vec{x}_0^*(\vec{x})) = \frac{\partial \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0}\bigg|_{\vec{x}_0=\vec{x}_0^*} \\
+&\phi''_{S,zz}(\vec{x}_0^*(\vec{x})) = \frac{\partial^2 \phi_{S}(\vec{x})}{\partial z_0^2}\bigg|_{\vec{x}_0=\vec{x}_0^*}\qquad
+&\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x})) = \frac{\partial^2 \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0^2}\bigg|_{\vec{x}_0=\vec{x}_0^*}
+\end{align}
+for the derivatives of the phases.
+Note that the shortened version omits the index $_0$, keep \eqref{eq:PntSrcDerivEqualities} in mind.
+
+\subsubsection{Second Derivative of Phase w.r.t. z}
+For the primary point source example we get
+\begin{align}
+&\frac{\partial \phi_{S}(\vec{x})}{\partial z_0} = - \wc \frac{z_0-z_S}{|\vec{x}_0-\vec{x}_S|}\qquad
+\frac{\partial^2 \phi_{S}(\vec{x})}{\partial z_0^2} = \frac{\partial}{\partial z_0}[- \wc \frac{z_0-z_S}{|\vec{x}_0-\vec{x}_S|}]\\
+&\frac{\partial^2 \phi_{S}(\vec{x})}{\partial z_0^2} = \frac{-\wc |\vec{x}_0-\vec{x}_S|^2 + \wc (z_0-z_S)^2}{|\vec{x}_0-\vec{x}_S|^3}\\
+&\frac{\partial \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0} = +\wc \frac{z-z_0}{|\vec{x}-\vec{x}_0|}\qquad
+\frac{\partial^2 \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0^2} = \frac{\partial}{\partial z_0}[\wc \frac{z-z_0}{|\vec{x}-\vec{x}_0|}]\\
+&\frac{\partial^2 \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0^2} = \frac{-\wc |\vec{x}-\vec{x}_0|^2 + \wc (z-z_0)^2}{|\vec{x}-\vec{x}_0|^3}
+\end{align}
+In the stationary point we get (cf. \cite[eq. (10)ff]{Firtha2018})
+\begin{align}
+\label{eq:phizz}
+\frac{\partial^2 \phi_{S}(\vec{x}_0-\vec{x}_S)}{\partial z_0^2}\bigg|_{z_0=z_0^*} = \frac{-\wc}{|\vec{x}_0-\vec{x}_S|}\qquad
+\frac{\partial^2 \phi_{G}(\vec{x}-\vec{x}_0)}{\partial z_0^2}\bigg|_{z_0=z_0^*} = \frac{-\wc}{|\vec{x}-\vec{x}_0|}
+\end{align}
+\fscom{Copy from \cite{Firtha2018} for convenience $\rightarrow$}
+%
+Both, the 2.5D WFS theory and the evaluation of Fourier integrals rely on the stationary phase approximation (SPA).
+This method yields an approximate solution for integrals
+\begin{equation}
+\label{Eq:SPAintegral}
+I = \int\limits_{-\infty}^{\infty} F(x) \, \e^{\im \phi(x)} \, \fsd x
+\end{equation}
+with real-valued $F,\phi$ that (i) contain at least one critical point in the integration path and (ii) considering highly oscillating $\e^{\im \phi(x)}$ compared to slowly varying $F(x)$. % \cite{Bleistein1984, Bleistein1986, Williams1999}.
+The SPA is based on the Taylor series
+\begin{align}
+\phi(x) \approx \phi(x)\big|_{x=x^*} + \frac{(x-x^*)^2}{2} \frac{\partial^2 \phi(x)}{\partial x^2}\big|_{x=x^*} 
+\end{align} 
+of the phase function $\phi(x)$ around the critical point $x^*$, aka the stationary point, for which $\frac{\partial \phi(x)}{\partial x}|_{x=x^*} = 0$ and $\frac{\partial^2 \phi(x)}{\partial x^2}|_{x=x^*} \neq 0$ must hold for.
+Under the given assumptions \eqref{Eq:SPAintegral} is approximated as %\cite[(2.7.18)]{Bleistein1984}
+\begin{align}
+\label{Eq:SPAResult}
+I \approx \sqrt{\frac{2\pi}{| \frac{\partial^2 \phi(x)}{\partial x^2}|_{x=x^*}  |}} F(x^*) \, \e^{\im \phi(x^*) + \im \frac{\pi}{4}\,\mathrm{sgn}\left(  \frac{\partial^2 \phi(x)}{\partial x^2}|_{x=x^*}  \right)}.
+\end{align}
+For multidimensional integrals a generalized SPA formulation is available with the stationary point found, where the phase gradient vanishes. % \cite[(2.8.23)]{Bleistein1984}.
+However, the integration can be evaluated by applying multiple one-dimensional SPAs consecutively under the present presumptions.
+\fscom{$\leftarrow$ End of Copy from \cite{Firtha2018}}
+
+\subsubsection{Synthesis Integral from 1st SPA}
+With the SPA \eqref{Eq:SPAintegral}, \eqref{Eq:SPAResult} we can reduce \eqref{eq:HIE_FAR1} towards
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA1}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi}
+\im
+& \sqrt{\frac{2\pi}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))\cdot\nonumber\\
+&\e^{\im \frac{\pi}{4}\,\mathrm{sgn}(\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x})))}
+R \, \fsd \azx_0
+\end{align}
+%
+for the stationary point $z_0^*$. $z_0^* = 0$ holds when considering the listening plane in the $xy$-plane ($z=0$) and sound field's that exhibit local wave vectors $k_{S,z}(\vec{x}_0) = 0$ (such as point sources located within the $xy$-plane or plane waves traveling only with $k_x$ and $k_y$ components).
+These two assumptions trivially fulfill \eqref{eq:PhaseSGDer1Condition}, yielding $\vec{x}_0^*=(x_0^*,y_0^*,0)^\mathrm{T}$ by considering $\vec{x}=(x,y,0)^\mathrm{T}$, $\vec{x}_S=(x_S,y_S,0)^\mathrm{T}$. You might also recap this in \eqref{eq:WaveVectorsSPA1} for $z_S=0$ and $z=0$ requiring $z_0=z_0^*=0$.
+
+The sgn() of phase term results in $-1$, cf. \eqref{eq:phizz}, \cite[(4.11)ff]{Firtha2018Diss} following in
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA2}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi}
+\im
+&\sqrt{\frac{2\pi}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+\e^{-\im \frac{\pi}{4}}
+R \, \fsd \azx_0
+\end{align}
+%
+and rearranging $\im$ and $\wc$ as typical as for WFS literature
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA3}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi} &
+\sqrt{\frac{2\pi}{\im |\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+R \, \fsd \azx_0,
+\end{align}
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA4}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi}
+\sqrt{\frac{2\pi}{\jwc}} & 
+\sqrt{\frac{\wc}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+R \, \fsd \azx_0.
+\end{align}
+%
+Rewritten with the vertical principal curvature $\kappa$ and vertical principal radius $\rho$ of a wavefront (cf. \cite[(4.15)-(4.17), Fig. 3.2, Tab. 3.1]{Firtha2018Diss} we get
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA5}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi} 
+\sqrt{\frac{2\pi}{\jwc}} &
+\sqrt{\frac{1}{\kappa_S^v(\vec{x}_0^*(\vec{x}))+\kappa_G^v(\vec{x}-\vec{x}_0^*(\vec{x}))}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+R \, \fsd \azx_0,
+\end{align}
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA6}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi}
+\sqrt{\frac{2\pi}{\jwc}} &
+\sqrt{\frac{\rho_S^v(\vec{x}_0^*(\vec{x}))\cdot\rho_G^v(\vec{x}-\vec{x}_0^*(\vec{x}))}{\rho_S^v(\vec{x}_0^*(\vec{x}))+\rho_G^v(\vec{x}-\vec{x}_0^*(\vec{x}))}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+R \, \fsd \azx_0.
+\end{align}
+%
+From \eqref{eq:HIE_FAR1_SPA4}, \eqref{eq:HIE_FAR1_SPA5}, \eqref{eq:HIE_FAR1_SPA6} (cf. \cite[(4.15-4.17)]{Firtha2018Diss})
+\begin{align}
+&\sqrt{\frac{\wc}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}}=\\ 
+&\sqrt{\frac{1}{\kappa_S^v(\vec{x}_0^*(\vec{x}))+\kappa_G^v(\vec{x}-\vec{x}_0^*(\vec{x}))}}=\\
+&\sqrt{\frac{\rho_S^v(\vec{x}_0^*(\vec{x}))\cdot\rho_G^v(\vec{x}-\vec{x}_0^*(\vec{x}))}{\rho_S^v(\vec{x}_0^*(\vec{x}))+\rho_G^v(\vec{x}-\vec{x}_0^*(\vec{x}))}} 
+\end{align}
+with
+\begin{align}
+\phi_{S,zz} = \frac{-\wc}{|\vec{x}_0-\vec{x}_S|}\qquad
+\phi_{G,zz}  = \frac{-\wc}{|\vec{x}-\vec{x}_0|}
+\end{align}
+we figure the vertical principal curvatures
+\begin{align}
+\kappa_S^v(\vec{x}_0^*(\vec{x}) = \frac{1}{|\vec{x}_0^*(\vec{x})-\vec{x}_S|}\qquad
+\kappa_G^v(\vec{x}-\vec{x}_0^*(\vec{x})) = \frac{1}{|\vec{x}-\vec{x}_0^*(\vec{x})|}
+\end{align}
+and radii
+\begin{align}
+\rho_S^v(\vec{x}_0^*(\vec{x})) = |\vec{x}_0^*(\vec{x})-\vec{x}_S|\qquad
+\rho_G^v(\vec{x}-\vec{x}_0^*(\vec{x})) = |\vec{x}-\vec{x}_0^*(\vec{x})|
+\end{align}
+for the initiated primary point source example.
+%
+
+\subsubsection{Synthesis Integral Towards 2.5D Unified WFS}
+Due to \eqref{eq:SPA_condition_z} (we can simplify with factor 2) and accounting for 'visible' elements only (we can introduce a spatial window function) (cf. \textit{Application example \#2: The Kirchhoff approximation} at \cite[p.46]{Firtha2018Diss}) we get
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA7}
+S(\vec{x}) \approx \int\limits_{0}^{2\pi} 
+w(\vec{x}_0^*(\vec{x})) & \sqrt{\frac{8\pi}{\jwc}}
+\sqrt{\frac{\wc}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} \cdot \nonumber\\
+& \,\im \, k_{S,r}(\vec{x}_0^*(\vec{x})) \,
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+R \, \fsd \azx_0
+\end{align}
+%
+with
+%
+\begin{equation}\label{eq:as}
+w(\vec{x}_0^*(\vec{x})) =
+    \begin{cases}
+      1 & 
+       \unitn(\vec{x}_0^*(\vec{x})) \cdot \vec{k}_S(\vec{x}_0^*(\vec{x})) \geq 0 \\
+      0 & \text{otherwise}
+    \end{cases}.
+\end{equation}
+%
+Now we could define a relation between $\vec{x}_0^*=(r_0^*,\azx_0^*,0)^\mathrm{T}$ and $\vec{x}=(r,\azx,0)^\mathrm{T}$ to extract the WFS driving function $D_\text{2.5D WFS}(\vec{x}_0)$.
+Typically, the functional dependence $\vec{x}_0^*(\vec{x})$ is exchanged to $\vec{x}_\text{Ref}(\vec{x}_0)$, defining a reference curve, such that for each $\vec{x}_0$ exists a certain position $\vec{x}_\text{Ref}$ at which amplitude-correct SFS is ensured.
+This was introduced as \textbf{unified WFS framework} in \cite[Sec. IIIB]{Firtha2017} using the referencing function $d(\vec{x}_0)$ for defining positions of amplitude-correct synthesis (PCS).
+The synthesis integral is then formulated as
+%
+\begin{align}
+\label{eq:HIE_FAR1_SPA8}
+S(\vec{x}) \approx & \int\limits_{0}^{2\pi}
+\overbrace{\left[
+w(\vec{x}_0)\,\sqrt{\frac{8\pi}{\jwc}}
+\sqrt{\underbrace{\left[\frac{\wc}{|\phi''_{S,zz}(\vec{x}_0)+\phi''_{G,zz}(\vec{x}_\text{Ref}(\vec{x}_0)-\vec{x}_0)|}\right]}_{d(\vec{x}_0)}} 
+\,\im \, k_{S,r}(\vec{x}_0) \,
+S(\vec{x}_0)\right]}^{D_\text{2.5D WFS}(\vec{x}_0)}\,G(\vec{x}-\vec{x}_0)
+R \, \fsd \azx_0,
+\end{align}
+%
+which yields \textbf{unified 2.5D WFS} using local wave vector and local wavefront curvature concepts, cf. \cite[Sec. 4.1.3]{Firtha2018Diss}, here for the special case using a circular SSD in the synthesis integral.
+
+ \subsection{Stationary Phase Approximation w.r.t. Azimuth}
+\fscom{NOTE: the following calculus in this subsection, although resulting in something meaningful, is most probably a wrong Ansatz for reducing Single Layer Potential with two SPAs in polar/cylindrical coordinates. We have to check for consistency with the Hessian matrix approach from \cite[App. B]{Firtha2018Diss} to make sure.}
+
+We move on with a further SPA w.r.t. $\azx_0$. The phase term of \eqref{eq:HIE_FAR1_SPA4} must now follow
+%
+\begin{align}
+\frac{\partial \phi(\vec{x}, \vec{x_0})}{\partial \azx_0}\bigg|_{\vec{x}_0=\vec{x}_0^*} \stackrel{!}{=} 0\qquad 
+\frac{\partial^2 \phi(\vec{x}, \vec{x_0})}{\partial \azx_0^2}\bigg|_{\vec{x}_0=\vec{x}_0^*} \neq 0
+\end{align}
+%
+Again, short notation (omitting $_0$ index again)
+%
+\begin{align}
+\phi'_{S,\azx}(\vec{x}_0^*(\vec{x})) = \frac{\partial \phi_{S}(\vec{x})}{\partial \azx_0}\bigg|_{\vec{x}_0=\vec{x}_0^*}\qquad
+\phi'_{G,\azx}(\vec{x}-\vec{x}_0^*(\vec{x})) = \frac{\partial \phi_{G}(\vec{x}-\vec{x}_0)}{\partial \azx_0}\bigg|_{\vec{x}_0=\vec{x}_0^*} \\
+\phi''_{S,\azx\azx}(\vec{x}_0^*(\vec{x})) = \frac{\partial^2 \phi_{S}(\vec{x})}{\partial \azx_0^2}\bigg|_{\vec{x}_0=\vec{x}_0^*}\qquad
+\phi''_{G,\azx\azx}(\vec{x}-\vec{x}_0^*(\vec{x})) = \frac{\partial^2 \phi_{G}(\vec{x}-\vec{x}_0)}{\partial \azx_0^2}\bigg|_{\vec{x}_0=\vec{x}_0^*}
+\end{align}
+%
+will be used later.
+%
+\subsubsection{First Derivative of Phase w.r.t. Azimuth}
+We check $\frac{\partial \phi(\vec{x}, \vec{x_0})}{\partial \azx_0}\big|_{\vec{x}_0=\vec{x}_0^*} \stackrel{!}{=} 0$ first with the above initiated example of a target point source.
+For that we consider the remaining 2D polar coordinates (for each $\vec{x}$-related vector the $z$-component is zero as demanded by the first SPA above)
+\begin{align}
+x_0 = \cos\azx\qquad x = \cos\azx\qquad y_0 = \sin\azx_0\qquad y = \sin\azx.
+\end{align}
+The phase terms are
+\begin{align}
+\phi_G = -\wc |\vec{x} -\vec{x}_0|\qquad\phi_S = -\wc |\vec{x}_0 - \vec{x}_S|.
+\end{align}
+Recast in polar coordinates
+\begin{align}
+\phi_G =& -\wc \sqrt{(r \cos\azx-r_0 \cos\azx_0)^2 + (r \sin\azx-r_0 \sin\azx_0)^2}\\
+\phi_S =& -\wc \sqrt{(r_0 \cos\azx_0-r_S \cos\azx_S)^2 + (r_0 \sin\azx_0-r_S \sin\azx_S)^2}
+\end{align}
+and expand for convenient derivation w.r.t. $\azx_0$
+\begin{align}
+\phi_G =& -\wc \sqrt{r^2 \cos^2\azx + r_0^2 \cos^2\azx_0 -2 r r_0 \cos\azx \cos\azx_0 + r^2 \sin^2\azx + r_0^2 \sin^2\azx_0 -2 r r_0 \sin\azx \sin\azx_0}\\
+=& -\wc \sqrt{r^2 + r_0^2 - 2 r r_0 (\cos\azx \cos\azx_0 + \sin\azx \sin\azx_0)}\\
+\phi_S =& -\wc \sqrt{r_0^2 + r_S^2 - 2 r_0 r_S (\cos\azx_0 \cos\azx_S + \sin\azx_0 \sin\azx_S)}
+\end{align}
+\begin{align}
+\frac{\partial \phi_G}{\partial \azx_0} =& -\wc \frac{- 2 r r_0 (-\cos\azx\sin\azx_0+\sin\azx \cos\azx_0)}{2\cdot \sqrt{r^2 + r_0^2 - 2 r r_0 (\cos\azx \cos\azx_0 + \sin\azx \sin\azx_0)}}\\
+=& + \wc \frac{r r_0 (-\cos\azx\sin\azx_0+\sin\azx \cos\azx_0)}{|\vec{x} -\vec{x}_0|}\\
+=& + \wc \frac{r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|}\\
+\frac{\partial \phi_S}{\partial \azx_0} =& -\wc \frac{- 2 r_0 r_S (-\sin\azx_0\cos\azx_S+\cos\azx_0\sin\azx_S)}{2\cdot \sqrt{r_0^2 + r_S^2 - 2 r_0 r_S (\cos\azx_0 \cos\azx_S + \sin\azx_0 \sin\azx_S)}}\\
+=& +\wc \frac{r_0 r_S (-\sin\azx_0\cos\azx_S+\cos\azx_0\sin\azx_S)}{|\vec{x}_0 - \vec{x}_S|}\\
+=& -\wc \frac{r_0 r_S \sin(\azx_0 - \azx_S)}{|\vec{x}_0 - \vec{x}_S|}
+\end{align}
+Only the $2\pi$-periodic sine terms (stationary point location is $2\pi$-periodic as expected) together with the sign of the whole term can result in $\frac{\partial \phi_G}{\partial \azx_0}\big|_{\azx_0=\azx_0^*} + \frac{\partial \phi_S}{\partial \azx_0}\big|_{\azx_0=\azx_0^*} \stackrel{!}{=} 0$, i.e. we must demand
+\begin{align}
+\underbrace{+\sin(\azx - \azx_0)}_{\propto -k_{G,\azx}^I} + \underbrace{-\sin(\azx_0 - \azx_S)}_{\propto -k_{S,\azx}} \stackrel{!}{=} 0\qquad\rightarrow\qquad
+\underbrace{+\sin(\azx - \azx_0)}_{\propto -k_{G,\azx}^I = +k_{G,\azx}} \stackrel{!}{=} \underbrace{+\sin(\azx_0 - \azx_S)}_{\propto +k_{S,\azx}}
+\end{align}
+using the above introduced local wave vector definitions.
+The condition is fulfilled (simply yielding $0 \stackrel{!}{=} 0$), when $\azx_0 = \azx_S$ together with either $\azx = \azx_0$ or $\azx = \azx_0 + \pi$, which proves the trivial fact that if the source, receiver and SSD positions are located along a straight line, the intersection at the SSD (if any, the shorter one to xPS, \fscom{check, this might indicate windowing}) is the stationary point. 
+Similarly, to \eqref{eq:SPA_condition_azx}
+\begin{align}
+\label{eq:SPA_condition_azx}
+k_{S,\azx}(\azx_0^*(\azx)) = k_{G,\azx}(\azx - \azx_0^*(\azx))
+\end{align}
+holds.
+
+\subsubsection{Second Derivative of Phase}
+From above we take the first derivatives and prep second derivatives
+\begin{align}
+\frac{\partial \phi_G}{\partial \azx_0} =+\wc \frac{r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|}\qquad 
+&\frac{\partial^2 \phi_G}{\partial \azx_0^2} =+\frac{\partial }{\partial \azx_0} [ \wc \frac{r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|} ] \\
+\frac{\partial \phi_S}{\partial \azx_0} =-\wc \frac{r_0 r_S \sin(\azx_0 - \azx_S)}{|\vec{x}_0 - \vec{x}_S|} \qquad
+&\frac{\partial^2 \phi_S}{\partial \azx_0^2} =-\frac{\partial}{\partial \azx_0} [ \wc \frac{r_0 r_S \sin(\azx_0 - \azx_S)}{|\vec{x}_0 - \vec{x}_S|} ] 
+\end{align}
+With $(\frac{u}{v})' = \frac{u'v-uv'}{v^2}$ and sin/cos addition theorems we have for $\phi_G$:
+\begin{align}
+u =&  + r r_0 \sin(\azx-\azx_0)\\
+u' =& - r r_0 \cos(\azx-\azx_0)\\
+v =& |\vec{x} -\vec{x}_0| = \sqrt{r^2 + r_0^2 - 2 r r_0 (\cos\azx \cos\azx_0 + \sin\azx \sin\azx_0)}\\
+v =& |\vec{x} -\vec{x}_0| = \sqrt{r^2 + r_0^2 - 2 r r_0 \cos(\azx - \azx_0)}\\
+v' =& \frac{- 2 r r_0 (-\cos\azx \sin\azx_0 + \sin\azx \cos\azx_0)}{2\sqrt{r^2 + r_0^2 - 2 r r_0 (\cos\azx \cos\azx_0 + \sin\azx \sin\azx_0)}}\\
+v' =& \frac{- r r_0 \sin(\azx-\azx_0)}{\sqrt{r^2 + r_0^2 - 2 r r_0 \cos(\azx-\azx_0)}} = \frac{- r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|}
+\end{align}
+Bringing together $(\frac{u}{v})'$:
+\begin{align}
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc \frac{
+-r r_0 \cos(\azx-\azx_0) |\vec{x} -\vec{x}_0| -
+(r r_0 \sin(\azx-\azx_0) \frac{- r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|})
+}
+{|\vec{x} -\vec{x}_0|^2} \\
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc \frac{
+- r r_0 \cos(\azx-\azx_0) |\vec{x} -\vec{x}_0|^2-
+(r r_0 \sin(\azx-\azx_0) (- r r_0 \sin(\azx-\azx_0))
+)}
+{|\vec{x} -\vec{x}_0|^3}\\
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc \frac{
+- r r_0 \cos(\azx-\azx_0) |\vec{x} -\vec{x}_0|^2 + 
+r^2 r_0^2 \sin^2(\azx-\azx_0)
+}
+{|\vec{x} -\vec{x}_0|^3}\\
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc \frac{
+- r r_0 \cos(\azx-\azx_0) |\vec{x} -\vec{x}_0|^2 + 
+r^2 r_0^2 (1-\cos^2(\azx-\azx_0))
+}
+{|\vec{x} -\vec{x}_0|^3}
+\end{align}
+%
+With $|\vec{x} -\vec{x}_0| = \sqrt{r^2 + r_0^2 -2 r r_0 \cos(\azx-\azx_0)}$
+%
+\begin{align}
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc \frac{
+- r r_0 \cos(\azx-\azx_0) (r^2 + r_0^2 -2 r r_0 \cos(\azx-\azx_0)) + 
+r^2 r_0^2 (1-\cos^2(\azx-\azx_0))
+}
+{|\vec{x} -\vec{x}_0|^3}\\
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc r r_0 \frac{
+- \cos(\azx-\azx_0) (r^2 + r_0^2 -2 r r_0 \cos(\azx-\azx_0)) + 
+r r_0 (1-\cos^2(\azx-\azx_0))
+}
+{|\vec{x} -\vec{x}_0|^3}\\
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc r r_0 \frac{
+-r^2 \cos(\azx-\azx_0) - r_0^2 \cos(\azx-\azx_0) + 2 r r_0 \cos^2(\azx-\azx_0) + 
+r r_0 - r r_0 \cos^2(\azx-\azx_0)
+}
+{|\vec{x} -\vec{x}_0|^3}\\
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc r r_0 \frac{
+-r^2 \cos(\azx-\azx_0) - r_0^2 \cos(\azx-\azx_0) + r r_0 \cos^2(\azx-\azx_0) + 
+r r_0
+}
+{|\vec{x} -\vec{x}_0|^3}
+\end{align}
+This yields
+\begin{align}
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc r r_0 \frac{
+(r \cos(\azx-\azx_0) - r_0) \cdot (r_0 \cos(\azx-\azx_0) - r)
+}
+{|\vec{x} -\vec{x}_0|^3}.
+\end{align}
+For $\phi_S$ a similar calculus yields
+\begin{align}
+\frac{\partial^2 \phi_S}{\partial \azx_0^2} =&+\wc r_0 r_S \frac{
+(r_0 \cos(\azx_0-\azx_S) - r_S) \cdot (r_S \cos(\azx_0-\azx_S) - r_0)
+}
+{|\vec{x}_0 -\vec{x}_S|^3}.
+\end{align}
+In the stationary point all cosine terms become unity, i.e.
+\begin{align}
+\frac{\partial^2 \phi_G}{\partial^2 \azx_0} =&+\wc r r_0 \frac{
+(r - r_0) \cdot (r_0 - r)
+}
+{|\vec{x} -\vec{x}_0|^3} = -\wc r r_0 \frac{
+(r - r_0)^2 
+}
+{|\vec{x} -\vec{x}_0|^3}=
+-\wc \frac{r r_0}{|\vec{x} -\vec{x}_0|}\\
+%
+\frac{\partial^2 \phi_S}{\partial \azx_0^2} =&+\wc r_0 r_S \frac{
+(r_0 - r_S) \cdot (r_S - r_0)
+}
+{|\vec{x}_0 -\vec{x}_S|^3} = -\wc r_0 r_S \frac{
+(r_0 - r_S)^2
+}
+{|\vec{x}_0 -\vec{x}_S|^3} = -\wc \frac{
+r_0 r_S
+}
+{|\vec{x}_0 -\vec{x}_S|}
+\end{align}
+
+
+
+\subsubsection{Synthesis Integral from 2nd SPA}
+\begin{align}
+S(\vec{x}) \approx \sqrt{\frac{2\pi}{\jwc}}  
+&
+\sqrt{\frac{\wc}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&
+\sqrt{\frac{2\pi}{|\phi''_{S,\azx\azx}(\vec{x}_0^*(\vec{x}))+\phi''_{G,\azx\azx}(\vec{x}-\vec{x}_0^*(\vec{x}))|}}
+\e^{\im \frac{\pi}{4}\,\mathrm{sgn}(\phi''_{S,\azx\azx}(\vec{x}_0^*(\vec{x}))+\phi''_{G,\azx\azx}(\vec{x}-\vec{x}_0^*(\vec{x})))}\nonumber\\
+&
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x})) R
+\end{align}
+For sgn = -1
+\begin{align}
+S(\vec{x}) \approx 
+&
+\sqrt{\frac{2\pi}{\jwc}}  
+\sqrt{\frac{\wc}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&
+\sqrt{\frac{2\pi}{\jwc}}
+\sqrt{\frac{\wc}{|\phi''_{S,\azx\azx}(\vec{x}_0^*(\vec{x}))+\phi''_{G,\azx\azx}(\vec{x}-\vec{x}_0^*(\vec{x}))|}}\nonumber\\
+&
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x})) R
+\end{align}
+$\sqrt{\frac{2\pi}{\jwc}}$ handling:
+\begin{align}
+S(\vec{x}) \approx \frac{2\pi}{\jwc}R \cdot
+&  
+\sqrt{\frac{\wc}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&
+\sqrt{\frac{\wc}{|\phi''_{S,\azx\azx}(\vec{x}_0^*(\vec{x}))+\phi''_{G,\azx\azx}(\vec{x}-\vec{x}_0^*(\vec{x}))|}}\nonumber\\
+&
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+\end{align}
+canceling $\wc$ 
+\begin{align}
+S(\vec{x}) \approx \frac{2\pi}{\im}R \cdot
+&  
+\sqrt{\frac{1}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\cdot \im \, \left[
+k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
+\right]\cdot\nonumber\\
+&
+\sqrt{\frac{1}{|\phi''_{S,\azx\azx}(\vec{x}_0^*(\vec{x}))+\phi''_{G,\azx\azx}(\vec{x}-\vec{x}_0^*(\vec{x}))|}}\nonumber\\
+&
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+\end{align}
+Same handling as from \eqref{eq:HIE_FAR1_SPA6} to \eqref{eq:HIE_FAR1_SPA7}
+\begin{align}
+S(\vec{x}) \approx w(\vec{x}_0^*(\vec{x})) \frac{4\pi}{\im}R \cdot
+&  
+\sqrt{\frac{1}{|\phi''_{S,zz}(\vec{x}_0^*(\vec{x}))+\phi''_{G,zz}(\vec{x}-\vec{x}_0^*(\vec{x}))|}} 
+\cdot \im \, 
+k_{S,r}(\vec{x}_0^*(\vec{x}))
+\cdot\nonumber\\
+&
+\sqrt{\frac{1}{|\phi''_{S,\azx\azx}(\vec{x}_0^*(\vec{x}))+\phi''_{G,\azx\azx}(\vec{x}-\vec{x}_0^*(\vec{x}))|}}\nonumber\\
+&
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+\end{align}
+which has then a similar look as \cite[(38)]{Firtha2018} (this solves in Cartesian coordinates!), here we have additional factor $R$\fscom{?!?!}.
+Unit check of this equation with all above phase derivatives is consistent, though.
+We have an SPA based propagation law from sound field $S(\vec{x}_0^*(\vec{x}))$ towards $S(\vec{x})$.
+
+
+\bibliographystyle{IEEEtranSA.bst}
+\bibliography{literature}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
