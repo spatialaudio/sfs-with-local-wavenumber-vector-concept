@@ -28,10 +28,12 @@
 %
 This is a recalculation and double check of Fiete Winter's \url{nfc_hoa-vs-wfs.tex} of commit \url{7f2221a} in \url{https://github.com/spatialaudio/sfs-with-local-wavenumber-vector-concept}.
 
-We omit the $\omega$-dependence in the (local) wave vectors, phases, sound fields and so on. The vector scalar product notation is $\vec{a} \cdot \vec{b}$.
+We omit the $\omega$-dependence in the (local) wave vector $\vec{k}$, sound field phase $\phi$, sound field $S(\vec{x})$ and so on. The vector scalar product notation is $\vec{a} \cdot \vec{b}$.
 %
-We use $\e^{+\im \omega t}$ time convention, imaginary unit $\im$. The (local) wave vectors indicate propagating direction with convention $\vec{k} = - \nabla \phi$.
+We use $\e^{+\im \omega t}$ time convention with imaginary unit denoted by $\im$.
 %
+Then (local) wave vectors indicate propagating direction with convention $\vec{k} = - \nabla \phi$ using spatial gradient operator $\nabla$.
+
 The first SPA w.r.t. height is given very detailed to recheck the unified WFS framework in tutorial style.
 
 \section{High Frequency Approximation of Helmholtz Integral Equation in Cylindrical Coordinates, WFS}
@@ -42,20 +44,21 @@ A position vector on the SSD is described by (cartesian, cylindrical, spherical)
 \begin{align}
 \vec{x}_0 = (x_0,y_0,z_0)^\mathrm{T} = (r_0,\azx_0, z_0)^\mathrm{T} = (r_0,\azx_0, \elx_0)^\mathrm{T}
 \end{align}
-using $\azx$...azimuth, $\elx$...colatitude, $z$...height, $r$...radius.
+using $\azx$...azimuth, $\elx$...colatitude/zenith angle, $z$...height, $r$...radius.
+We utilize cylindrical SSD and for convenience cylindrical coordinates.
 A position vector within the cylinder (i.e. listening space with $r<r_0$) is denoted by $\vec{x}$.
 %
 For the Helmholtz Integral Equation (HIE) the normal derivative w.r.t. inward normal is required.
 It reads
 \begin{align}
-\vec{n}_0 \cdot \nabla = -\frac{\partial}{\partial r} \qquad \vec{n}_0 \cdot \nabla|_{r=r_0} = -\frac{\partial}{\partial r}|_{r=r_0}.
+\vec{n}_0 \cdot \nabla = -\frac{\partial}{\partial r} \qquad \vec{n}_0 \cdot \nabla\big|_{r=r_0} = -\frac{\partial}{\partial r}\bigg|_{r=r_0}.
 \end{align}
 %
-The HIE for a cylindrical SSD with radius $R$ is then given as
+The HIE for a cylindrical SSD with radius $R$ \fscom{$r_0$ vs R}is then given as
 \begin{align}
 S(\vec{x}) = \int\limits_{0}^{2\pi}\int\limits_{-\infty}^{+\infty}
 \left[
-G(\vec{x}-\vec{x}_0) \frac{\partial S(\vec{x})}{\partial r}|_{r=r_0} 
+G(\vec{x}-\vec{x}_0) \frac{\partial S(\vec{x})}{\partial r}\bigg|_{r=r_0} 
 -S(\vec{x_0}) \frac{\partial G(\vec{x}-\vec{x}_0)}{\partial r_0}\cdot \unitn(\vec{x}_0)
 \right]
 \fsd z_0 \, R \, \fsd \azx_0.
@@ -73,10 +76,10 @@ S(\vec{x_0})\,G(\vec{x}-\vec{x}_0)
 \fsd z_0 \, R \, \fsd \azx_0.
 \end{align}
 %
-For a target field of a point source and 3D Green's freefield function we get (cf. \cite[Sec. 2.2.1]{Schultz2016Diss})
+Using the point source for the target/primary sound field originating from $\vec{x}_S$ as well as for 3D Green's freefield function at $\vec{x}_0$, we get (cf. \cite[Sec. 2.2.1]{Schultz2016Diss})
 \begin{align}
-&k_{S,r}(\vec{x_0}) = \wc \cos(\azx_S)\qquad
-&k_{G,r}(\vec{x_0}) = \wc \cos(\azx_G)\\
+&k_{S,r}(\vec{x_0}) = \wc \cos\azx_S\qquad
+&k_{G,r}(\vec{x_0}) = \wc \cos\azx_G\\
 &\cos\azx_S = \frac{\vec{x_0}-\vec{x}_S}{|\vec{x_0}-\vec{x}_S|} \cdot \vec{n}(\vec{x}_0)\qquad
 &\cos\azx_G = \frac{\vec{x}-\vec{x}_0}{\norm{\vec{x}-\vec{x}_0}} \cdot {\unitn(\vec{x}_0)}.
 \end{align}
@@ -229,7 +232,7 @@ S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))\cdot\nonumber\\
 R \, \fsd \azx_0
 \end{align}
 %
-for the stationary point $z_0^*$. $z_0^* = 0$ holds when considering the listening plane in the $xy$-plane ($z=0$) and sound field's that exhibit local wave vectors $k_{S,z}(\vec{x}_0) = 0$ (such as point sources located within the $xy$-plane or plane waves traveling only with $k_x$ and $k_y$ components).
+for the stationary point $z_0^*$. $z_0^* = 0$ holds when considering the listening plane in the $xy$-plane ($z=0$) and sound fields that exhibit local wave vectors $k_{S,z}(\vec{x}_0) = 0$ (such as point sources located within the $xy$-plane or plane waves traveling only with $k_x$ and $k_y$ components).
 These two assumptions trivially fulfill \eqref{eq:PhaseSGDer1Condition}, yielding $\vec{x}_0^*=(x_0^*,y_0^*,0)^\mathrm{T}$ by considering $\vec{x}=(x,y,0)^\mathrm{T}$, $\vec{x}_S=(x_S,y_S,0)^\mathrm{T}$. You might also recap this in \eqref{eq:WaveVectorsSPA1} for $z_S=0$ and $z=0$ requiring $z_0=z_0^*=0$.
 
 The sgn() of phase term results in $-1$, cf. \eqref{eq:phizz}, \cite[(4.11)ff]{Firtha2018Diss} following in
@@ -247,7 +250,7 @@ k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
 R \, \fsd \azx_0
 \end{align}
 %
-and rearranging $\im$ and $\wc$ as typical as for WFS literature
+and rearranging $\e^{-\im \frac{\pi}{4}}$ and $\wc$ typical for WFS literature
 %
 \begin{align}
 \label{eq:HIE_FAR1_SPA3}
@@ -272,7 +275,7 @@ k_{S,r}(\vec{x}_0^*(\vec{x})) + k_{G,r}(\vec{x} - \vec{x}_0^*(\vec{x}))
 R \, \fsd \azx_0.
 \end{align}
 %
-Rewritten with the vertical principal curvature $\kappa$ and vertical principal radius $\rho$ of a wavefront (cf. \cite[(4.15)-(4.17), Fig. 3.2, Tab. 3.1]{Firtha2018Diss} we get
+Rewritten with the vertical principal curvature $\kappa$ [1/m] and vertical principal radius $\rho=1/\kappa$ [m] of a wavefront (cf. \cite[(4.15)-(4.17), Fig. 3.2, Tab. 3.1]{Firtha2018Diss} we get
 %
 \begin{align}
 \label{eq:HIE_FAR1_SPA5}
@@ -323,7 +326,7 @@ for the initiated primary point source example.
 %
 
 \subsubsection{Synthesis Integral Towards 2.5D Unified WFS}
-Due to \eqref{eq:SPA_condition_z} (we can simplify with factor 2) and accounting for 'visible' elements only (we can introduce a spatial window function) (cf. \textit{Application example \#2: The Kirchhoff approximation} at \cite[p.46]{Firtha2018Diss}) we get
+Due to \eqref{eq:SPA_condition_z} (we can simplify with factor 2 when assuming stationary point) and accounting for 'visible' elements only (we can introduce a spatial window function) (cf. \textit{Application example \#2: The Kirchhoff approximation} at \cite[p.46]{Firtha2018Diss}) we get
 %
 \begin{align}
 \label{eq:HIE_FAR1_SPA7}
@@ -414,12 +417,13 @@ and expand for convenient derivation w.r.t. $\azx_0$
 =& +\wc \frac{r_0 r_S (-\sin\azx_0\cos\azx_S+\cos\azx_0\sin\azx_S)}{|\vec{x}_0 - \vec{x}_S|}\\
 =& -\wc \frac{r_0 r_S \sin(\azx_0 - \azx_S)}{|\vec{x}_0 - \vec{x}_S|}
 \end{align}
-Only the $2\pi$-periodic sine terms (stationary point location is $2\pi$-periodic as expected) together with the sign of the whole term can result in $\frac{\partial \phi_G}{\partial \azx_0}\big|_{\azx_0=\azx_0^*} + \frac{\partial \phi_S}{\partial \azx_0}\big|_{\azx_0=\azx_0^*} \stackrel{!}{=} 0$, i.e. we must demand
+Thus for $\frac{\partial \phi_G}{\partial \azx_0}\big|_{\azx_0=\azx_0^*} + \frac{\partial \phi_S}{\partial \azx_0}\big|_{\azx_0=\azx_0^*} \stackrel{!}{=} 0$ we must demand
 \begin{align}
-\underbrace{+\sin(\azx - \azx_0)}_{\propto -k_{G,\azx}^I} + \underbrace{-\sin(\azx_0 - \azx_S)}_{\propto -k_{S,\azx}} \stackrel{!}{=} 0\qquad\rightarrow\qquad
-\underbrace{+\sin(\azx - \azx_0)}_{\propto -k_{G,\azx}^I = +k_{G,\azx}} \stackrel{!}{=} \underbrace{+\sin(\azx_0 - \azx_S)}_{\propto +k_{S,\azx}}
+\underbrace{+\wc \frac{r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|}}_{\propto -k_{G,\azx}^I} + \underbrace{-\wc \frac{r_0 r_S \sin(\azx_0 - \azx_S)}{|\vec{x}_0 - \vec{x}_S|}}_{\propto -k_{S,\azx}} \stackrel{!}{=} 0\qquad\rightarrow\qquad
+\underbrace{\frac{r \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|}}_{\propto -k_{G,\azx}^I = +k_{G,\azx}} \stackrel{!}{=} \underbrace{\frac{r_S \sin(\azx_0 - \azx_S)}{|\vec{x}_0 - \vec{x}_S|}}_{\propto +k_{S,\azx}}
 \end{align}
 using the above introduced local wave vector definitions.
+Only (pretty sure about that, but not strictly proven) the $2\pi$-periodic sine terms (stationary point location is $2\pi$-periodic as expected) can result in equality of the latter equation.
 The condition is fulfilled (simply yielding $0 \stackrel{!}{=} 0$), when $\azx_0 = \azx_S$ together with either $\azx = \azx_0$ or $\azx = \azx_0 + \pi$, which proves the trivial fact that if the source, receiver and SSD positions are located along a straight line, the intersection at the SSD (if any, the shorter one to xPS, \fscom{check, this might indicate windowing}) is the stationary point. 
 Similarly, to \eqref{eq:SPA_condition_azx}
 \begin{align}
@@ -429,7 +433,7 @@ k_{S,\azx}(\azx_0^*(\azx)) = k_{G,\azx}(\azx - \azx_0^*(\azx))
 holds.
 
 \subsubsection{Second Derivative of Phase}
-From above we take the first derivatives and prep second derivatives
+From above we repeat first derivatives and prep second derivatives
 \begin{align}
 \frac{\partial \phi_G}{\partial \azx_0} =+\wc \frac{r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|}\qquad 
 &\frac{\partial^2 \phi_G}{\partial \azx_0^2} =+\frac{\partial }{\partial \azx_0} [ \wc \frac{r r_0 \sin(\azx-\azx_0)}{|\vec{x} -\vec{x}_0|} ] \\
@@ -604,6 +608,125 @@ which has then a similar look as \cite[(38)]{Firtha2018} (this solves in Cartesi
 Unit check of this equation with all above phase derivatives is consistent, though.
 We have an SPA based propagation law from sound field $S(\vec{x}_0^*(\vec{x}))$ towards $S(\vec{x})$.
 
+
+We insert the SPA I and II
+\begin{align}
+S(\vec{x}) \approx 4 \pi r_0 \cdot
+&  
+\sqrt{\frac{1}{|\frac{-\wc}{|\vec{x}_0-\vec{x}_S|}+\frac{-\wc}{|\vec{x}-\vec{x}_0|}|}} 
+\cdot \, 
+k_{S,r}(\vec{x}_0^*(\vec{x}))
+\cdot\nonumber\\
+&
+\sqrt{\frac{1}{|-\wc \frac{r_0 r_S}{|\vec{x}_0 -\vec{x}_S|}-\wc \frac{r r_0}{|\vec{x} -\vec{x}_0|}|}}\nonumber\\
+&
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+\end{align}
+and insert for $k_{S,r}$ in the stationary point
+\begin{align}
+k_{S,r}(\vec{x_0}) = \wc
+\end{align}
+\begin{align}
+S(\vec{x}) \approx 4 \pi r_0 \cdot
+&  
+\sqrt{\frac{1}{|\frac{-\wc}{|\vec{x}_0-\vec{x}_S|}+\frac{-\wc}{|\vec{x}-\vec{x}_0|}|}} 
+\cdot \, 
+\wc
+\cdot\nonumber\\
+&
+\sqrt{\frac{1}{|-\wc \frac{r_0 r_S}{|\vec{x}_0 -\vec{x}_S|}-\wc \frac{r r_0}{|\vec{x} -\vec{x}_0|}|}}\nonumber\\
+&
+S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))
+\end{align}
+and for $S(\vec{x}_0^*(\vec{x}))\,G(\vec{x}-\vec{x}_0^*(\vec{x}))$  in the stationary point
+\begin{align}
+&S(\vec{x}_0^*(\vec{x})) = \frac{1}{4\pi} \frac{\e^{-\jwc |\vec{x}_0-\vec{x}_s|}}{|\vec{x}_0-\vec{x}_s|}\\
+&G(\vec{x}-\vec{x}_0^*(\vec{x})) = \frac{1}{4\pi} \frac{\e^{-\jwc |\vec{x}-\vec{x}_0|}}{|\vec{x}-\vec{x}_0|}
+\end{align}
+
+\begin{align}
+S(\vec{x}) \approx 4 \pi r_0 \cdot
+&  
+\sqrt{\frac{1}{|\frac{-\wc}{|\vec{x}_0-\vec{x}_S|}+\frac{-\wc}{|\vec{x}-\vec{x}_0|}|}} 
+\cdot \, 
+\wc
+\cdot\nonumber\\
+&
+\sqrt{\frac{1}{|-\wc \frac{r_0 r_S}{|\vec{x}_0 -\vec{x}_S|}-\wc \frac{r r_0}{|\vec{x} -\vec{x}_0|}|}}\nonumber\\
+&\frac{1}{4\pi} \frac{\e^{-\jwc |\vec{x}_0-\vec{x}_s|}}{|\vec{x}_0-\vec{x}_s|}\nonumber\\
+&\frac{1}{4\pi} \frac{\e^{-\jwc |\vec{x}-\vec{x}_0|}}{|\vec{x}-\vec{x}_0|}
+\end{align}
+Remove $4\pi$ and $\wc$
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+&  
+\sqrt{\frac{1}{|\frac{1}{|\vec{x}_0-\vec{x}_S|}+\frac{1}{|\vec{x}-\vec{x}_0|}|}} 
+\sqrt{\frac{1}{|\frac{r_0 r_S}{|\vec{x}_0 -\vec{x}_S|}+\frac{r r_0}{|\vec{x} -\vec{x}_0|}|}}\nonumber\\
+&\frac{\e^{-\jwc |\vec{x}_0-\vec{x}_s|}}{|\vec{x}_0-\vec{x}_s|}
+\frac{1}{4\pi} \frac{\e^{-\jwc |\vec{x}-\vec{x}_0|}}{|\vec{x}-\vec{x}_0|}
+\end{align}
+We realize that $|\vec{x}_0-\vec{x}_s| + |\vec{x} -\vec{x}_0| = |\vec{x} -\vec{x}_s|$ in stationary point. This yields
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+&  
+\sqrt{\frac{1}{|\frac{1}{|\vec{x}_0-\vec{x}_S|}+\frac{1}{|\vec{x}-\vec{x}_0|}|}} 
+\sqrt{\frac{1}{|\frac{r_0 r_S}{|\vec{x}_0 -\vec{x}_S|}+\frac{r r_0}{|\vec{x} -\vec{x}_0|}|}}\nonumber\\
+&\frac{\e^{-\jwc |\vec{x}-\vec{x}_s|}}{|\vec{x}_0-\vec{x}_s|\cdot |\vec{x}-\vec{x}_0|}
+\frac{1}{4\pi} 
+\end{align}
+Rearranging fractions
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+&  
+\sqrt{\frac{|\vec{x}_0-\vec{x}_S|\cdot |\vec{x}-\vec{x}_0|}{|\vec{x}_0-\vec{x}_S| + |\vec{x}-\vec{x}_0|}} \cdot
+\sqrt{\frac{|\vec{x}_0-\vec{x}_S|\cdot |\vec{x}-\vec{x}_0|}{r_0 r_S |\vec{x} -\vec{x}_0| + r_0 r |\vec{x}_0-\vec{x}_S|}}
+\nonumber\\
+&\frac{\e^{-\jwc |\vec{x}-\vec{x}_s|}}{|\vec{x}_0-\vec{x}_s|\cdot |\vec{x}-\vec{x}_0|}
+\frac{1}{4\pi} 
+\end{align}
+cancels out
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+&  
+\sqrt{\frac{1}{|\vec{x}_0-\vec{x}_S| + |\vec{x}-\vec{x}_0|}} \cdot
+\sqrt{\frac{1}{r_0 r_S |\vec{x} -\vec{x}_0| + r_0 r |\vec{x}_0-\vec{x}_S|}}
+\nonumber\\
+&\e^{-\jwc |\vec{x}-\vec{x}_s|}
+\frac{1}{4\pi} 
+\end{align}
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+&  
+\sqrt{\frac{1}{|\vec{x}_0-\vec{x}_S| + |\vec{x}-\vec{x}_0|}} \cdot
+\sqrt{\frac{|\vec{x}_0-\vec{x}_S| + |\vec{x}-\vec{x}_0|}{|\vec{x}_0-\vec{x}_S| + |\vec{x}-\vec{x}_0|}} 
+\sqrt{\frac{1}{r_0 r_S |\vec{x} -\vec{x}_0| + r_0 r |\vec{x}_0-\vec{x}_S|}}
+\nonumber\\
+&\e^{-\jwc |\vec{x}-\vec{x}_s|}
+\frac{1}{4\pi} 
+\end{align}
+
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+\sqrt{\frac{|\vec{x}_0-\vec{x}_S| + |\vec{x}-\vec{x}_0|}{r_0 r_S |\vec{x} -\vec{x}_0| + r_0 r |\vec{x}_0-\vec{x}_S|}}
+\frac{\e^{-\jwc |\vec{x}-\vec{x}_s|}}{4 \pi |\vec{x}-\vec{x}_s|} 
+\end{align}
+
+For $\vec{x} = (0,0,0)^\mathrm{T}$, $r = 0$, i.e. listening point in origin we obtain
+
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+\sqrt{\frac{|\vec{x}_0-\vec{x}_s| + |\vec{x}_0|}{r_0 r_S |\vec{x}_0|}}
+\frac{\e^{-\jwc |\vec{x}-\vec{x}_s|}}{4 \pi |\vec{x}-\vec{x}_s|} 
+\end{align}
+
+\begin{align}
+S(\vec{x}) \approx r_0 \cdot
+\sqrt{\frac{r_s}{r^2_0 r_S}}
+\frac{\e^{-\jwc |\vec{x}-\vec{x}_s|}}{4 \pi |\vec{x}-\vec{x}_s|} =
+\frac{\e^{-\jwc |\vec{x}-\vec{x}_s|}}{4 \pi |\vec{x}-\vec{x}_s|}
+\end{align}
+
+as expected, i.e. phase and amplitude correct SFS of the target point source in this single location.
 
 \bibliographystyle{IEEEtranSA.bst}
 \bibliography{literature}
