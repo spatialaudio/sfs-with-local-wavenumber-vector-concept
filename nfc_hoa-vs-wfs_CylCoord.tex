@@ -742,6 +742,266 @@ However, the integration can be evaluated by applying multiple one-dimensional S
 \fscom{$\leftarrow$ End of Copy from \cite{Firtha2018}}
 
 
+
+\section{Appendix B}
+
+\begin{align}
+D(\mathbf{x}_0,\omega) = -w(\mathbf{x}_0) \sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi} \cdot
+\sqrt{r_0} \cdot
+[\cos\phi_0 \cos\phi_{PW} + \sin\phi_0 \sin\phi_{PW}]
+\cdot
+\mathrm{e}^{- \mathrm{j} \frac{\omega}{c}
+[
+r_0 \cos\phi_0 \cos\phi_{PW} + r_0 \sin\phi_0 \sin\phi_{PW}
+]}
+\end{align}
+
+yielding
+\begin{align}
+D(\mathbf{x}_0,\omega) = -w(\mathbf{x}_0) \sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi} \cdot
+\sqrt{r_0} \cdot
+[\cos(\phi_0-\phi_{PW})]
+\cdot
+\mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})}
+\end{align}
+
+\begin{align}
+D(\mathbf{x}_0,\omega) = -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
+w(\mathbf{x}_0) \cdot
+\frac{1}{2}[\mathrm{e}^{+\mathrm{j}(\phi_0-\phi_{PW})}+\mathrm{e}^{-\mathrm{j}(\phi_0-\phi_{PW})}]
+\cdot
+\mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})}
+\end{align}
+
+\begin{align}
+D(\mathbf{x}_0,\omega) = -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
+w(\mathbf{x}_0) \cdot
+\frac{1}{2}[
+\mathrm{e}^{+\mathrm{j}(\phi_0-\phi_{PW})}\mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})}
++\mathrm{e}^{-\mathrm{j}(\phi_0-\phi_{PW})}\mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})}
+]
+\end{align}
+
+\begin{align}
+D(\mathbf{x}_0,\omega) = -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
+w(\mathbf{x}_0) \cdot
+\frac{1}{2}[
+\mathrm{e}^{+\mathrm{j}[(\phi_0-\phi_{PW})-\frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})]}
++\mathrm{e}^{-\mathrm{j}[(\phi_0-\phi_{PW})+\frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})]}
+]
+\end{align}
+
+For the Fourier series
+$D[m] = \int_0^{2\pi} D(\mathbf{x}_0,\omega) \mathrm{e}^{-\mathrm{j} m \phi_0}\mathrm{d}\phi_0$, according to Ahrens book, we realize the multiplication of two $\phi_0$-dependent functions, i.e. $w(\mathbf{x}_0)$ and one of the exp-terms. If we would know the Fourier series of the single functions we could derive the final results as convolution of the Fourier series. This sounds like a nice idea.
+
+So, the Fourier series of the first exp-function would be
+
+\begin{align}
+\int_0^{2\pi}
+\mathrm{e}^{+\mathrm{j}[(\phi_0-\phi_{PW})-\frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})]}
+\e^{- \im m \phi_0 } \fsd \phi_0
+\end{align}
+
+Nara's idea: with $\theta=\phi_0-\phi_{PW}$, $\fsd \theta / \fsd \phi_0 = 1$
+\begin{align}
+\int_0^{2\pi}
+\mathrm{e}^{+\mathrm{j}[\theta-\frac{\omega}{c} r_0
+\cos(\theta)]}
+\e^{- \im m (\theta+\phi_{PW})} \fsd \theta
+\end{align}
+\begin{align}
+\e^{- \im m \phi_{PW}} 
+\int_0^{2\pi}
+\mathrm{e}^{+\mathrm{j}[\theta-\frac{\omega}{c} r_0
+\cos\theta]}
+\e^{- \im m \theta} \fsd \theta
+\end{align}
+\begin{align}
+\e^{- \im m \phi_{PW}} 
+\int_0^{2\pi}
+\mathrm{e}^{+\mathrm{j}[(1-m)\theta-\frac{\omega}{c} r_0
+\cos\theta]}
+\fsd \theta
+\end{align}
+\begin{align}
+\e^{- \im m \phi_{PW}} 
+\int_0^{2\pi}
+\mathrm{e}^{-\mathrm{j}[(m-1)\theta+\frac{\omega}{c} r_0
+\cos\theta]}
+\fsd \theta
+\end{align}
+So, the Fourier series of the second exp-function would be
+\begin{align}
+\int_0^{2\pi}
+\mathrm{e}^{-\mathrm{j}[(\phi_0-\phi_{PW})+\frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})]}
+\e^{- \im m \phi_0 } \fsd \phi_0
+\end{align}
+\begin{align}
+\int_0^{2\pi}
+\mathrm{e}^{-\mathrm{j}[\theta+\frac{\omega}{c} r_0
+\cos\theta]}
+\e^{- \im m (\theta+\phi_{PW})} \fsd \theta
+\end{align}
+\begin{align}
+\e^{- \im m \phi_{PW}}
+\int_0^{2\pi}
+\mathrm{e}^{-\mathrm{j}[\theta+\frac{\omega}{c} r_0
+\cos\theta]}
+\e^{- \im m \theta} \fsd \theta
+\end{align}
+\begin{align}
+\e^{- \im m \phi_{PW}}
+\int_0^{2\pi}
+\mathrm{e}^{-\mathrm{j}[(m+1)\theta+\frac{\omega}{c} r_0
+\cos\theta]}
+\fsd \theta
+\end{align}
+Both integrals combined
+\begin{align}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+[
+\int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[(m-1)\theta+\frac{\omega}{c} r_0 \cos\theta]} \fsd \theta+
+\int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[(m+1)\theta+\frac{\omega}{c} r_0 \cos\theta]} \fsd \theta
+]
+\end{align}
+with $n_-=m-1$, $n_+=m+1$ and $z=\frac{\omega}{c} r_0 $ 
+\begin{align}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+[
+\int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[n_-\theta+z \cos\theta]} \fsd \theta+
+\int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[n_+\theta+z \cos\theta]} \fsd \theta
+]
+\end{align}
+with $n_-=-(m-1)$, $n_+=-(m+1)$ and $z=-\frac{\omega}{c} r_0 $ 
+\begin{align}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+[
+\int_0^{2\pi} \mathrm{e}^{\mathrm{j} n_-\theta}\mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta+
+\int_0^{2\pi} \mathrm{e}^{\mathrm{j} n_+\theta}\mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta
+]
+\end{align}
+\begin{align}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+[
+\int_0^{2\pi} (\cos(n_-\theta)+\im \sin(n_-\theta)) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta+
+\int_0^{2\pi} (\cos(n_+\theta)+\im \sin(n_+\theta)) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta
+]
+\end{align}
+For the first cosine we have
+\begin{align}
+\int_0^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
+\int_0^{\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta  + 
+\int_\pi^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta 
+\end{align}
+unsure about that, but we might rearrange pi to 2pi int
+\begin{align}
+\int_0^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
+\int_0^{\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta  + 
+\int_0^{\pi} -\cos(n_-\theta) \mathrm{e}^{-\mathrm{j} z \cos\theta} \fsd \theta 
+\end{align}
+Then with NIST 10.9.2
+\begin{align}
+\int_0^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
+J_{n_-}(z) \frac{\pi}{\im^{-n_-}} - J_{n_-}(-z) \frac{\pi}{\im^{-n_-}}
+\end{align}
+For the second cosine we have similarly
+\begin{align}
+\int_0^{2\pi} \cos(n_+\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta = 
+\int_0^{\pi} \cos(n_+\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta +
+\int_0^{\pi} -\cos(n_+\theta) \mathrm{e}^{-\mathrm{j} z \cos\theta} \fsd \theta
+\end{align}
+Again with NIST 10.9.2
+\begin{align}
+\int_0^{2\pi} \cos(n_+\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta = 
+J_{n_+}(z) \frac{\pi}{\im^{-n_+}} - J_{n_+}(-z) \frac{\pi}{\im^{-n_+}}
+\end{align}
+Combining both cosine With prefactor yields
+\begin{align}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+[
+J_{n_-}(z) \frac{\pi}{\im^{-n_-}} - J_{n_-}(-z) \frac{\pi}{\im^{-n_-}} + 
+J_{n_+}(z) \frac{\pi}{\im^{-n_+}} - J_{n_+}(-z) \frac{\pi}{\im^{-n_+}}
+]
+\end{align}
+with $J_n(z) = (-1)^n J_n(-z)$
+\begin{align}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+[
+(-1)^{n_-} J_{n_-}(-z) \frac{\pi}{\im^{-n_-}} - J_{n_-}(-z) \frac{\pi}{\im^{-n_-}} + 
+(-1)^{n_+} J_{n_+}(-z) \frac{\pi}{\im^{-n_+}} - J_{n_+}(-z) \frac{\pi}{\im^{-n_+}}
+]
+\end{align}
+inserting var
+\begin{align}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+[
+(-1)^{(-m+1)} J_{(-m+1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m+1)}} - J_{(-m+1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m+1)}} + \\
+(-1)^{(-m-1)} J_{(-m-1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m-1)}} - J_{(-m-1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m-1)}}
+]
+\end{align}
+since $-\infty\leq m \leq +\infty$ in the Fourier series we can $-m\rightarrow +m$
+\begin{align}
+\frac{1}{2}
+\e^{+ \im m \phi_{PW}}
+[
+(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m+1)}} - J_{m+1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m+1)}} + \\
+(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m-1)}} - J_{m-1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m-1)}}
+]
+\end{align}
+bring $\im^{-(m)}$ and $\pi$ out
+\begin{align}
+\frac{\pi\,\e^{+ \im m \phi_{PW}}}{2\,\im^{-m}}
+[
+(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \frac{1}{\im^{-1}} - J_{m+1}(\frac{\omega}{c} r_0) \frac{1}{\im^{-1}} + \\
+(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \frac{1}{\im^{+1}} - J_{m-1}(\frac{\omega}{c} r_0) \frac{1}{\im^{+1}}
+]
+\end{align}
+\begin{align}
+\frac{\pi\,\e^{+ \im m \phi_{PW}}}{2\,\im^{-m}}
+[
+(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \im + J_{m+1}(\frac{\omega}{c} r_0) \im - \\
+(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \im + J_{m-1}(\frac{\omega}{c} r_0) \im
+]
+\end{align}
+\begin{align}
+\frac{\im\,\pi\,\e^{+ \im m \phi_{PW}}}{2\,\im^{-m}}
+[
+(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) + J_{m+1}(\frac{\omega}{c} r_0)  - \\
+(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) + J_{m-1}(\frac{\omega}{c} r_0) 
+]
+\end{align}
+\begin{align}
+\frac{\im^{m+1}\,\pi\,\e^{+ \im m \phi_{PW}}}{2}
+[
+(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) + J_{m+1}(\frac{\omega}{c} r_0)  - \\
+(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) + J_{m-1}(\frac{\omega}{c} r_0) 
+]
+\end{align}
+
+\begin{align}
+\frac{\im^{m+1}\,\pi\,\e^{+ \im m \phi_{PW}}}{2}
+[
+\left(1+(-1)^{(m+1)}\right) J_{m+1}(\frac{\omega}{c} r_0)+
+\left(1-(-1)^{(m-1)}\right) J_{m-1}(\frac{\omega}{c} r_0) 
+]
+\end{align}
+
+
 \bibliographystyle{IEEEtranSA.bst}
 \bibliography{literature}
 \end{document}
