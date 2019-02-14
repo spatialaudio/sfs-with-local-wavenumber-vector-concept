@@ -9,8 +9,8 @@ tic
 wavelength = 1;  % in m
 c = 343;  % speed of sound in m/s
 % ### since the simulation works in normalized kr-domain, 'far' is the only
-% factor you need to play with:
-far = 100;  % far factor
+% factor we need to play with:
+far = 10;  % far factor
 
 kr0 = far*pi  % very large for valid far/hf approx
 k = 2*pi/wavelength;  % in rad/m
@@ -35,17 +35,20 @@ D_WFS_FS_Conv_numeric = zeros(1, 2*M+1);
 D_WFS_FS_Conv_analytic = zeros(1, 2*M+1);
 
 %%
-phi_0 = [0:L-1]*2*pi/L;
+phi_pw = 4*pi/4;  % we might change the prop direction of plane wave
+% note: all handling of sec src sel etc. is hopefully correctly performed
+% relativel to phi_pw
+
+phi_start = phi_pw + pi/2;
+phi_0 = phi_start + [0:L-1]*2*pi/L;
 x_0 = r0*cos(phi_0);
 y_0 = r0*sin(phi_0);
 
 % 2.5D WFS driving function of plane wave with referencing to origin
 x_ref = r0/2;
-phi_pw = pi/2;
 D_WFS = - sqrt(8*pi*1i*k*x_ref) .*  cos(phi_0-phi_pw) .*...
     exp(-1i*k*r0 .* cos(phi_0-phi_pw));
-% window valid for phi_pw = pi/2!!!
-D_WFS( find( phi_0 < pi ) ) = 0;                          
+D_WFS(L/2+1:end) = 0;  %sec src sel = spatial window
 
 % get first Fourier series coefficients
 for m = -M:+M
@@ -86,19 +89,20 @@ end
 %%
 D_WFS_partJ = cos(phi_0-phi_pw) .* exp(-1i*k*r0 .* cos(phi_0-phi_pw));
 D_WFS_partSinc = phi_0*0+1;
-D_WFS_partSinc(find(phi_0<pi)) = 0;  % window valid for phi_pw = pi/2!!!
+D_WFS_partSinc(L/2+1:end) = 0;  % truncation window
+
+tmp = D_WFS_FS_Sinc_analytic*0;
 
 for m = -M:+M
     D_WFS_FS_J_numeric(1, m+M+1) = 1/(2*pi) *...
         sum(D_WFS_partJ .* exp(-1i*m.*phi_0),2) * (2*pi)/L;
     D_WFS_FS_Sinc_numeric(1, m+M+1) = 1/(2*pi) *...
         sum(D_WFS_partSinc .* exp(-1i*m.*phi_0),2) * (2*pi)/L;
-    D_WFS_FS_Sinc_analytic(1, m+M+1) = -1i*(-1+exp(1i*pi*m))  / m /2/pi;
+    D_WFS_FS_Sinc_analytic(1, m+M+1) = -1i*(exp(-1i*m*(phi_pw+pi/2)) ...
+        - exp(-1i*m*(phi_pw+3*pi/2)))  / m /2/pi;
     if m==0
-        D_WFS_FS_Sinc_analytic(1, m+M+1) = pi /2/pi;
+        D_WFS_FS_Sinc_analytic(1, m+M+1) = +pi /2/pi;
     end
-        
-    
 end
 
 % convolution of Fourier Series
@@ -192,5 +196,18 @@ xlim([-3 +3])
 xlabel("m / ceil(kr0), discrete m!")
 ylabel(" ")
 grid on
+
+%%
+if 0
+    figure
+    plot(m,db(D_WFS_FS_J_numeric)), hold on
+    plot(m,db(D_WFS_FS_Sinc_numeric)), hold off
+    hold off
+    xlim([-3 +3])
+    ylim([-80 20])
+    xlabel("m / ceil(kr0), discrete m!")
+    ylabel(" ")
+    grid on
+end
 
 toc
