@@ -803,7 +803,7 @@ $D[m] = \int_0^{2\pi} D(\mathbf{x}_0,\omega) \mathrm{e}^{-\mathrm{j} m \phi_0}\m
 So, the Fourier series of the first exp-function would be
 
 \begin{align}
-\int_0^{2\pi}
+\frac{1}{2\pi}\int_0^{2\pi}
 \mathrm{e}^{+\mathrm{j}[(\phi_0-\phi_{PW})-\frac{\omega}{c} r_0
 \cos(\phi_0-\phi_{PW})]}
 \e^{- \im m \phi_0 } \fsd \phi_0
@@ -811,19 +811,20 @@ So, the Fourier series of the first exp-function would be
 
 Nara's idea: with $\theta=\phi_0-\phi_{PW}$, $\fsd \theta / \fsd \phi_0 = 1$
 \begin{align}
-\int_0^{2\pi}
+\frac{1}{2\pi}\int_0^{2\pi}
 \mathrm{e}^{+\mathrm{j}[\theta-\frac{\omega}{c} r_0
 \cos(\theta)]}
 \e^{- \im m (\theta+\phi_{PW})} \fsd \theta
 \end{align}
 \begin{align}
-\e^{- \im m \phi_{PW}} 
+\frac{1}{2\pi} \e^{- \im m \phi_{PW}} 
 \int_0^{2\pi}
 \mathrm{e}^{+\mathrm{j}[\theta-\frac{\omega}{c} r_0
 \cos\theta]}
 \e^{- \im m \theta} \fsd \theta
 \end{align}
 \begin{align}
+\frac{1}{2\pi}
 \e^{- \im m \phi_{PW}} 
 \int_0^{2\pi}
 \mathrm{e}^{+\mathrm{j}[(1-m)\theta-\frac{\omega}{c} r_0
@@ -831,26 +832,30 @@ Nara's idea: with $\theta=\phi_0-\phi_{PW}$, $\fsd \theta / \fsd \phi_0 = 1$
 \fsd \theta
 \end{align}
 \begin{align}
+\frac{1}{2\pi}
 \e^{- \im m \phi_{PW}} 
 \int_0^{2\pi}
 \mathrm{e}^{-\mathrm{j}[(m-1)\theta+\frac{\omega}{c} r_0
 \cos\theta]}
 \fsd \theta
 \end{align}
-So, the Fourier series of the second exp-function would be
+Similarly, the Fourier series of the second exp-function would be
 \begin{align}
+\frac{1}{2\pi}
 \int_0^{2\pi}
 \mathrm{e}^{-\mathrm{j}[(\phi_0-\phi_{PW})+\frac{\omega}{c} r_0
 \cos(\phi_0-\phi_{PW})]}
 \e^{- \im m \phi_0 } \fsd \phi_0
 \end{align}
 \begin{align}
+\frac{1}{2\pi}
 \int_0^{2\pi}
 \mathrm{e}^{-\mathrm{j}[\theta+\frac{\omega}{c} r_0
 \cos\theta]}
 \e^{- \im m (\theta+\phi_{PW})} \fsd \theta
 \end{align}
 \begin{align}
+\frac{1}{2\pi}
 \e^{- \im m \phi_{PW}}
 \int_0^{2\pi}
 \mathrm{e}^{-\mathrm{j}[\theta+\frac{\omega}{c} r_0
@@ -858,14 +863,16 @@ So, the Fourier series of the second exp-function would be
 \e^{- \im m \theta} \fsd \theta
 \end{align}
 \begin{align}
+\frac{1}{2\pi}
 \e^{- \im m \phi_{PW}}
 \int_0^{2\pi}
 \mathrm{e}^{-\mathrm{j}[(m+1)\theta+\frac{\omega}{c} r_0
 \cos\theta]}
 \fsd \theta
 \end{align}
-Both integrals combined
+Both integrals combined with the factor $1/2$ yield the Fourier series analysis
 \begin{align}
+\frac{1}{2\pi}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
 [
@@ -873,133 +880,107 @@ Both integrals combined
 \int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[(m+1)\theta+\frac{\omega}{c} r_0 \cos\theta]} \fsd \theta
 ]
 \end{align}
-with $n_-=m-1$, $n_+=m+1$ and $z=\frac{\omega}{c} r_0 $ 
+We now introduce 
+% $a=m-1$, $b=m+1$ and $z=\frac{\omega}{c} r_0 $ 
+% \begin{align}
+% \frac{1}{2\pi}
+% \frac{1}{2}
+% \e^{- \im m \phi_{PW}}
+% [
+% \int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[a \theta + z \cos\theta]} \fsd \theta +
+% \int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[b \theta + z \cos\theta]} \fsd \theta
+% ]
+% \end{align}
+% respectively with
+$a=-(m-1)$, $b=-(m+1)$ and $z=-\frac{\omega}{c} r_0 $ 
 \begin{align}
+\frac{1}{2\pi}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
 [
-\int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[n_-\theta+z \cos\theta]} \fsd \theta+
-\int_0^{2\pi} \mathrm{e}^{-\mathrm{j}[n_+\theta+z \cos\theta]} \fsd \theta
+\int_0^{2\pi} \mathrm{e}^{+\mathrm{j}[a \theta + z \cos\theta]} \fsd \theta +
+\int_0^{2\pi} \mathrm{e}^{+\mathrm{j}[b \theta + z \cos\theta]} \fsd \theta
 ]
 \end{align}
-with $n_-=-(m-1)$, $n_+=-(m+1)$ and $z=-\frac{\omega}{c} r_0 $ 
+Expanding Euler yields
 \begin{align}
+\frac{1}{2\pi}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
 [
-\int_0^{2\pi} \mathrm{e}^{\mathrm{j} n_-\theta}\mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta+
-\int_0^{2\pi} \mathrm{e}^{\mathrm{j} n_+\theta}\mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta
+\int_0^{2\pi} (\cos(a\theta)+\im \sin(a\theta)) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta+
+\int_0^{2\pi} (\cos(b\theta)+\im \sin(b\theta)) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta
 ]
 \end{align}
+For the first cosine integral we have
 \begin{align}
-\frac{1}{2}
-\e^{- \im m \phi_{PW}}
-[
-\int_0^{2\pi} (\cos(n_-\theta)+\im \sin(n_-\theta)) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta+
-\int_0^{2\pi} (\cos(n_+\theta)+\im \sin(n_+\theta)) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta
-]
+\int_0^{2\pi} \cos(a\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
+\int_0^{\pi} \cos(a\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta  + 
+\int_\pi^{2\pi} \cos(a\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta 
 \end{align}
-For the first cosine we have
+which can be rearranged to
 \begin{align}
-\int_0^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
-\int_0^{\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta  + 
-\int_\pi^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta 
+\int_0^{2\pi} \cos(a\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
+\int_0^{\pi} \cos(a\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta  + 
+\int_0^{\pi} \cos(a(\theta+\pi)) \mathrm{e}^{\mathrm{j} z \cos(\theta+\pi)} \fsd \theta 
 \end{align}
-unsure about that, but we might rearrange pi to 2pi int
+Then with NIST 10.9.2 (second integral $\theta^* = \theta + \pi$, subst, new int limits)
 \begin{align}
-\int_0^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
-\int_0^{\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta  + 
-\int_0^{\pi} -\cos(n_-\theta) \mathrm{e}^{-\mathrm{j} z \cos\theta} \fsd \theta 
+\int_0^{2\pi} \cos(a\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
+2 J_{a}(z) \frac{\pi}{\im^{-a}}
 \end{align}
-Then with NIST 10.9.2
+For the second cosine integral we have similarly
 \begin{align}
-\int_0^{2\pi} \cos(n_-\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta =
-J_{n_-}(z) \frac{\pi}{\im^{-n_-}} - J_{n_-}(-z) \frac{\pi}{\im^{-n_-}}
-\end{align}
-For the second cosine we have similarly
-\begin{align}
-\int_0^{2\pi} \cos(n_+\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta = 
-\int_0^{\pi} \cos(n_+\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta +
-\int_0^{\pi} -\cos(n_+\theta) \mathrm{e}^{-\mathrm{j} z \cos\theta} \fsd \theta
+\int_0^{2\pi} \cos(b\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta = 
+\int_0^{\pi} \cos(b\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta +
+\int_0^{\pi} \cos(b(\theta+\pi)) \mathrm{e}^{\mathrm{j} z \cos(\theta+\pi)} \fsd \theta
 \end{align}
 Again with NIST 10.9.2
 \begin{align}
-\int_0^{2\pi} \cos(n_+\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta = 
-J_{n_+}(z) \frac{\pi}{\im^{-n_+}} - J_{n_+}(-z) \frac{\pi}{\im^{-n_+}}
+\int_0^{2\pi} \cos(b\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta = 
+2 J_{b}(z) \frac{\pi}{\im^{-b}}
 \end{align}
-Combining both cosine With prefactor yields
+Combining both cosine results together prefactor yields
+\begin{align}
+\frac{1}{2\pi}
+\frac{1}{2}
+\e^{- \im m \phi_{PW}}
+(2 J_{a}(z) \frac{\pi}{\im^{-a}} + 2 J_{b}(z) \frac{\pi}{\im^{-b}})
+\end{align}
 \begin{align}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
-[
-J_{n_-}(z) \frac{\pi}{\im^{-n_-}} - J_{n_-}(-z) \frac{\pi}{\im^{-n_-}} + 
-J_{n_+}(z) \frac{\pi}{\im^{-n_+}} - J_{n_+}(-z) \frac{\pi}{\im^{-n_+}}
-]
+(J_{a}(z) \frac{1}{\im^{-a}} + J_{b}(z) \frac{1}{\im^{-b}})
 \end{align}
-with $J_n(z) = (-1)^n J_n(-z)$
+With $J_a(z) = (-1)^a J_a(-z)$ we get
 \begin{align}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
-[
-(-1)^{n_-} J_{n_-}(-z) \frac{\pi}{\im^{-n_-}} - J_{n_-}(-z) \frac{\pi}{\im^{-n_-}} + 
-(-1)^{n_+} J_{n_+}(-z) \frac{\pi}{\im^{-n_+}} - J_{n_+}(-z) \frac{\pi}{\im^{-n_+}}
-]
+((-1)^a J_{a}(-z) \frac{1}{\im^{-a}} + (-1)^b J_{b}(-z) \frac{1}{\im^{-b}})
 \end{align}
-inserting var
+reinsert $a=-(m-1)$, $b=-(m+1)$ and $z=-\frac{\omega}{c} r_0 $ 
 \begin{align}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
-[
-(-1)^{(-m+1)} J_{(-m+1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m+1)}} - J_{(-m+1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m+1)}} + \\
-(-1)^{(-m-1)} J_{(-m-1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m-1)}} - J_{(-m-1)}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(-m-1)}}
-]
-\end{align}
-since $-\infty\leq m \leq +\infty$ in the Fourier series we can $-m\rightarrow +m$
-\begin{align}
-\frac{1}{2}
-\e^{+ \im m \phi_{PW}}
-[
-(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m+1)}} - J_{m+1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m+1)}} + \\
-(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m-1)}} - J_{m-1}(\frac{\omega}{c} r_0) \frac{\pi}{\im^{-(m-1)}}
-]
-\end{align}
-bring $\im^{-(m)}$ and $\pi$ out
-\begin{align}
-\frac{\pi\,\e^{+ \im m \phi_{PW}}}{2\,\im^{-m}}
-[
-(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \frac{1}{\im^{-1}} - J_{m+1}(\frac{\omega}{c} r_0) \frac{1}{\im^{-1}} + \\
-(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \frac{1}{\im^{+1}} - J_{m-1}(\frac{\omega}{c} r_0) \frac{1}{\im^{+1}}
-]
+((-1)^{-(m-1)} J_{-(m-1)}(\frac{\omega}{c} r_0) \frac{1}{\im^{m-1}} + (-1)^{-(m+1)} J_{-(m+1)}(\frac{\omega}{c} r_0) \frac{1}{\im^{m+1}})
 \end{align}
 \begin{align}
-\frac{\pi\,\e^{+ \im m \phi_{PW}}}{2\,\im^{-m}}
-[
-(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \im + J_{m+1}(\frac{\omega}{c} r_0) \im - \\
-(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \im + J_{m-1}(\frac{\omega}{c} r_0) \im
-]
+\frac{1}{2 \im^m}
+\e^{- \im m \phi_{PW}}
+((-1)^{-(m-1)} J_{-(m-1)}(\frac{\omega}{c} r_0) \frac{1}{\im^{-1}} + (-1)^{-(m+1)} J_{-(m+1)}(\frac{\omega}{c} r_0) \frac{1}{\im^{+1}})
 \end{align}
+with $J_{-n} = (-1)^n J_n$
 \begin{align}
-\frac{\im\,\pi\,\e^{+ \im m \phi_{PW}}}{2\,\im^{-m}}
-[
-(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) + J_{m+1}(\frac{\omega}{c} r_0)  - \\
-(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) + J_{m-1}(\frac{\omega}{c} r_0) 
-]
+\frac{1}{2 \im^m}
+\e^{- \im m \phi_{PW}}
+((-1)^{-(m-1)} (-1)^{+(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \frac{1}{\im^{-1}} + (-1)^{-(m+1)} (-1)^{+(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \frac{1}{\im^{+1}})
 \end{align}
+This is what we want to get:
 \begin{align}
-\frac{\im^{m+1}\,\pi\,\e^{+ \im m \phi_{PW}}}{2}
-[
-(-1)^{(m+1)} J_{m+1}(\frac{\omega}{c} r_0) + J_{m+1}(\frac{\omega}{c} r_0)  - \\
-(-1)^{(m-1)} J_{m-1}(\frac{\omega}{c} r_0) + J_{m-1}(\frac{\omega}{c} r_0) 
-]
+\frac{\e^{- \im m \phi_{PW}}}{2\,\im^{m-1}}
+(J_{m-1}(\frac{\omega}{c} r_0) - J_{m+1}(\frac{\omega}{c} r_0))
 \end{align}
-
-\begin{align}
-\frac{\im^{m+1}\,\pi\,\e^{+ \im m \phi_{PW}}}{2}
-[
-\left(1+(-1)^{(m+1)}\right) J_{m+1}(\frac{\omega}{c} r_0)+
-\left(1-(-1)^{(m-1)}\right) J_{m-1}(\frac{\omega}{c} r_0) 
-]
-\end{align}
+Note the similarity to \cite[Table 1]{Hahn2016AES}. 
 
 
 \bibliographystyle{IEEEtranSA.bst}

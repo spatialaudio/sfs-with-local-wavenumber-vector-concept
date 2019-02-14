@@ -1,6 +1,7 @@
-%NFC-HOA vs. WFS driving functions equivalence?!
-%inspired from
-%https://github.com/JensAhrens/soundfieldsynthesis/blob/master/Chapter_4/Fig_4_15.m
+% NFC-HOA vs. WFS driving functions equivalence?!
+% inspired from
+% https://github.com/JensAhrens/soundfieldsynthesis/blob/master/Chapter_4/Fig_4_15.m
+% Frank Schultz, github: fs446, 2019-02-14
 
 clear all
 clc
@@ -10,7 +11,7 @@ wavelength = 1;  % in m
 c = 343;  % speed of sound in m/s
 % ### since the simulation works in normalized kr-domain, 'far' is the only
 % factor we need to play with:
-far = 10;  % far factor
+far = 5;  % far factor
 
 kr0 = far*pi  % very large for valid far/hf approx
 k = 2*pi/wavelength;  % in rad/m
@@ -44,6 +45,9 @@ phi_0 = phi_start + [0:L-1]*2*pi/L;
 x_0 = r0*cos(phi_0);
 y_0 = r0*sin(phi_0);
 
+phi_int = [0:L-1]*2*pi/L;
+idxpi = find(phi_int==pi);
+
 % 2.5D WFS driving function of plane wave with referencing to origin
 x_ref = r0/2;
 D_WFS = - sqrt(8*pi*1i*k*x_ref) .*  cos(phi_0-phi_pw) .*...
@@ -70,7 +74,7 @@ D_HOA_FS_analytic = D_HOA_FS_analytic / sqrt(2);
 %%
 %we check if the contribution of this integral is zero for all m
 %although not strictly proven we can assume this so far
-if 0
+if 1
     D_sin1 = zeros(1, 2*M+1);
     D_sin2 = zeros(1, 2*M+1);
     for m=-M:+M
@@ -103,6 +107,11 @@ for m = -M:+M
     if m==0
         D_WFS_FS_Sinc_analytic(1, m+M+1) = +pi /2/pi;
     end
+    
+    D_WFS_FS_J_analytic(1, m+M+1) = exp(-1i*m*phi_pw) / (2*1i^(m-1)) * ...
+        (besselj(m-1,kr0) - besselj(m+1,kr0));  % ok!   
+
+    
 end
 
 % convolution of Fourier Series
@@ -154,7 +163,7 @@ hold off
 xlim([-3 +3])
 xlabel("m / ceil(kr0), discrete m!")
 ylabel("|D[m]|")
-title(['WFS: ', num2str(D_WFS_FS_numeric(M+1)), ...
+title(['m=0 -> WFS: ', num2str(D_WFS_FS_numeric(M+1)), ...
     ',   HOA: ', num2str(D_HOA_FS_analytic(M+1))])
 grid on
 
