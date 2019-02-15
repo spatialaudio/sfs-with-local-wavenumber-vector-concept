@@ -9,10 +9,10 @@ tic
 
 % since the simulation works in normalized kr-domain, we only need to play 
 % with the far factor
-far = 10;
+far = 5;
 
 %%
-kr0 = far*pi  % very large for valid far/hf approx
+kr0 = 10 %far*pi  % very large for valid far/hf approx
 M = 5*ceil(kr0);  % number of modes
 L = M*4  % number of secondary sources, >=M*2 to avoid spatial aliasing
 
@@ -137,7 +137,7 @@ ConvFS_Numeric = - sqrt(8*pi*1i*k*x_ref) *...
 ConvFS_Numeric = - sqrt(8*pi*1i*k*x_ref) *...
     conv(D_WFS_FS_J_analytic,D_WFS_FS_Sinc_analytic);
 
-idxConv = (length(ConvFS_Numeric)-1)/2-M:(length(ConvFS_Numeric)-1)/2+M;
+idxConv = (length(ConvFS_Numeric)-1)/2-M+1:(length(ConvFS_Numeric)-1)/2+M+1;
 ConvFS_Numeric = ConvFS_Numeric(idxConv);
 
 %%
@@ -151,8 +151,8 @@ plot(m, real(ConvFS_Numeric))
 
 hold off
 xlim([-3 +3])
-xlabel("m / ceil(kr0), discrete m!")
-ylabel("Re(D[m])")
+xlabel("m / \lceil kr0 \rceil, discrete m!")
+ylabel("Re(D(m))")
 legend('HOA analytic', 'WFS numeric', 'Conv numeric')
 grid on
 
@@ -164,8 +164,8 @@ plot(m, imag(ConvFS_Numeric))
 
 hold off
 xlim([-3 +3])
-xlabel("m / ceil(kr0), discrete m!")
-ylabel("Im(D[m])")
+xlabel("m / \lceil kr0 \rceil, discrete m!")
+ylabel("Im(D(m))")
 grid on
 
 
@@ -176,8 +176,8 @@ plot(m, abs(ConvFS_Numeric))
 
 hold off
 xlim([-3 +3])
-xlabel("m / ceil(kr0), discrete m!")
-ylabel("|D[m]|")
+xlabel("m / \lceil kr0 \rceil, discrete m!")
+ylabel("|D(m)|")
 title(['m=0 -> WFS: ', num2str(D_WFS_FS_numeric(M+1)), ...
     ',   HOA: ', num2str(D_HOA_FS_analytic(M+1))])
 grid on
@@ -191,34 +191,39 @@ plot(m, db(ConvFS_Numeric))
 hold off
 xlim([-3 +3])
 ylim([-100 20])
-xlabel("m / ceil(kr0), discrete m!")
-ylabel("|D[m]| in dB")
+xlabel("m / \lceil kr0 \rceil, discrete m!")
+ylabel("|D(m)| / dB")
 grid on
 
 
 subplot(325)
-plot(m,+1/2+real(D_WFS_FS_Sinc_analytic),'LineWidth',2), hold on
-plot(m,+1/2+real(D_WFS_FS_Sinc_numeric))
-plot(m,-1/2+imag(D_WFS_FS_Sinc_analytic),'LineWidth',2)
-plot(m,-1/2+imag(D_WFS_FS_Sinc_numeric))
+plot(m,1+real(D_WFS_FS_Sinc_analytic),'LineWidth',2), hold on
+plot(m,real(D_WFS_FS_J_analytic),'LineWidth',2)
+plot(m,1+real(D_WFS_FS_Sinc_numeric))
+plot(m,real(D_WFS_FS_J_numeric))
+
 
 hold off
 xlim([-3 +3])
-xlabel("m / ceil(kr0), discrete m!")
-ylabel(" ")
+xlabel("m / \lceil kr0 \rceil, discrete m!")
+ylabel(" D_{WFS}(m)")
+title(['\phi_{PW}=', num2str(phi_pw*180/pi), ' deg'])
+legend('Re(Sinc) + 1', 'Re(J_{m-1}-J_{m+1})')
 grid on
 
 
 subplot(326)
-plot(m,+1/2+real(D_WFS_FS_J_analytic),'LineWidth',2), hold on
-plot(m,+1/2+real(D_WFS_FS_J_numeric))
-plot(m,-1/2+imag(D_WFS_FS_J_analytic),'LineWidth',2)
-plot(m,-1/2+imag(D_WFS_FS_J_numeric))
+plot(m,1+imag(D_WFS_FS_Sinc_analytic),'LineWidth',2), hold on
+plot(m,1+imag(D_WFS_FS_Sinc_numeric))
+plot(m,imag(D_WFS_FS_J_analytic),'LineWidth',2)
+plot(m,imag(D_WFS_FS_J_numeric))
 
 hold off
 xlim([-3 +3])
-xlabel("m / ceil(kr0), discrete m!")
-ylabel(" ")
+xlabel("m / \lceil kr0 \rceil, discrete m!")
+ylabel(" D_{WFS}(m)")
+title(['\phi_{PW}=', num2str(phi_pw*180/pi), ' deg'])
+legend('Im(Sinc) + 1', 'Im(J_{m-1}-J_{m+1})')
 grid on
 
 %%
