@@ -7,6 +7,7 @@
 \usepackage{xcolor}
 \usepackage{url}
 \usepackage{amsmath}
+\usepackage{comment}
 \newcommand{\fscom}[2][red]{\textcolor{#1}{#2}}  %for comments in red
 \newcommand\e{\mathrm{e}}  % euler
 \newcommand\im{\mathrm{j}}  % imaginary unit
@@ -18,6 +19,11 @@
 \renewcommand{\vec}[1]{\mathbf{#1}}  % vector = bold
 \newcommand\unitn{\vec{n}}  % unit inward normal
 \newcommand{\norm}[1]{|#1|}  %magnitude (length) of vector
+
+%\excludecomment{calc}
+\includecomment{calc}
+\definecolor{CalcColor}{rgb}{0.0,0.0,0.5}
+\newcommand{\ExCalcCol}[2][CalcColor]{\textcolor{#1}{#2}} %ausführliche Rechnungen
 
 \title{Comparing the Implicit (WFS) and the Explicit (NFC-HOA) Solution of the 
 2.5D Single Layer Potential (SLP) in Cylindrical Coordinates}
@@ -331,7 +337,7 @@ with
 \begin{equation}\label{eq:as}
 w(\vec{x}_0^*(\vec{x})) =
     \begin{cases}
-      1 & 
+      1 &  \text{if}\qquad
        \unitn(\vec{x}_0^*(\vec{x})) \cdot \vec{k}_S(\vec{x}_0^*(\vec{x})) \geq 0 \\
       0 & \text{otherwise}
     \end{cases}.
@@ -717,7 +723,7 @@ S(\vec{x}) \approx r_0 \cdot
 as expected, i.e. phase and amplitude correct SFS of the target point source in this single location.
 
 
-\section{Appendix A}
+\section{Appendix A: Stationary Phase Approximation}
 \fscom{Copy from \cite{Firtha2018} for convenience $\rightarrow$}
 %
 Both, the 2.5D WFS theory and the evaluation of Fourier integrals rely on the stationary phase approximation (SPA).
@@ -743,31 +749,50 @@ However, the integration can be evaluated by applying multiple one-dimensional S
 
 
 
-\section{Appendix B}
+\section{Appendix B: Circular Harmonics Expansion of Plane Wave 2.5D WFS Driving Function}
+
+
+We check \cite[Ch. 4.4.2]{Ahrens2012} here in detail. Very helpful treatments on driving function expansions can be found in \cite{Hahn2016AES}.
+
+The 2.5D unified WFS driving function for a plane wave referencing to single point $\mathbf{x}_{Ref}$ is known as, cf. \cite[2.177]{Schultz2016Diss}
 
 \begin{align}
-D(\mathbf{x}_0,\omega) = -w(\mathbf{x}_0) \sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi} \cdot
+\label{eq:DPWWFS}
+D_{PW,WFS}(\mathbf{x}_0,\omega) = w(\mathbf{x}_0) \sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi} \cdot
+\sqrt{|\mathbf{x}_{Ref}-\mathbf{x}_{0}|} \cdot
+\langle \mathbf{\hat{k}}_{PW}, \mathbf{\hat{n}}(\mathbf{x}_0) \rangle \cdot
+\mathrm{e}^{- \mathrm{j} \frac{\omega}{c}\langle \mathbf{\hat{k}}_{PW}, \mathbf{x}_0 \rangle}
+\end{align}
+using the $xy$-plane for SFS and referencing to origin as in \cite[Ch. 4.4.2]{Ahrens2012}, thus wave propagating direction
+$\mathbf{\hat{k}}_{PW} = (\cos\phi_{PW}, \sin\phi_{PW},0)^\text{T}$, 
+$\mathbf{x}_0=(r_0 \cos\phi_0, r_0 \sin\phi_0)^\text{T}$, 
+$\mathbf{\hat{n}}(\mathbf{x}_0)=-(\cos\phi_0, \sin\phi_0)^\text{T}$,
+$\mathbf{x}_{Ref} = (0,0,0)^\text{T} \rightarrow |\mathbf{x}_{Ref}-\mathbf{x}_{0}|=|\mathbf{x}_{0}|=r_0$.
+
+We want to derive the Fourier series of the $\phi_0$-dependent terms in the above driving function. Once this is known, we can compare it with the Fourier series, which is inherently given in the 2.5D NFC-HOA plane wave driving function \cite[(5.1)]{Ahrens2012} (corrected here)
+\begin{align}
+D_{PW,HOA}(\mathbf{x}_0,\omega) = \sum\limits_{m=-\infty}^{+\infty} \underbrace{\frac{2 \mathrm{j}}{\frac{\omega}{c} r_0} \frac{(-\mathrm{j})^{|m|}}{h_{|m|}^{(2)}(\frac{\omega}{c} r_0)}
+\mathrm{e}^{-\mathrm{j} m \phi_{PW}}}_{D_{PW}(m,\omega)}
+\mathrm{e}^{\mathrm{j} m \phi_0}.
+\end{align}
+In \eqref{eq:DPWWFS} we can simplify and rearrange the dot products
+\begin{align}
+D_{PW,WFS}(\mathbf{x}_0,\omega)  =& -w(\mathbf{x}_0) \sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi} \cdot
 \sqrt{r_0} \cdot
 [\cos\phi_0 \cos\phi_{PW} + \sin\phi_0 \sin\phi_{PW}]
 \cdot
 \mathrm{e}^{- \mathrm{j} \frac{\omega}{c}
 [
 r_0 \cos\phi_0 \cos\phi_{PW} + r_0 \sin\phi_0 \sin\phi_{PW}
-]}
-\end{align}
-
-yielding
-\begin{align}
-D(\mathbf{x}_0,\omega) = -w(\mathbf{x}_0) \sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi} \cdot
+]}\\
+\label{eq:DPWWFS_FSPrep1}
+=& -w(\mathbf{x}_0) \sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi} \cdot
 \sqrt{r_0} \cdot
 [\cos(\phi_0-\phi_{PW})]
 \cdot
 \mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
-\cos(\phi_0-\phi_{PW})}
-\end{align}
-
-\begin{align}
-D(\mathbf{x}_0,\omega) = -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
+\cos(\phi_0-\phi_{PW})}\\
+=& -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
 w(\mathbf{x}_0) \cdot
 \frac{1}{2}[\mathrm{e}^{+\mathrm{j}(\phi_0-\phi_{PW})}+\mathrm{e}^{-\mathrm{j}(\phi_0-\phi_{PW})}]
 \cdot
@@ -776,18 +801,8 @@ w(\mathbf{x}_0) \cdot
 \end{align}
 
 \begin{align}
-D(\mathbf{x}_0,\omega) = -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
-w(\mathbf{x}_0) \cdot
-\frac{1}{2}[
-\mathrm{e}^{+\mathrm{j}(\phi_0-\phi_{PW})}\mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
-\cos(\phi_0-\phi_{PW})}
-+\mathrm{e}^{-\mathrm{j}(\phi_0-\phi_{PW})}\mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
-\cos(\phi_0-\phi_{PW})}
-]
-\end{align}
-
-\begin{align}
-D(\mathbf{x}_0,\omega) = -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
+\label{eq:DPWWFS_FSPrep2}
+D_{PW,WFS}(\mathbf{x}_0,\omega) = -\sqrt{8 \pi r_0 \frac{\mathrm{j \omega}}{c}} \cdot
 w(\mathbf{x}_0) \cdot
 \frac{1}{2}[
 \mathrm{e}^{+\mathrm{j}[(\phi_0-\phi_{PW})-\frac{\omega}{c} r_0
@@ -796,20 +811,18 @@ w(\mathbf{x}_0) \cdot
 \cos(\phi_0-\phi_{PW})]}
 ]
 \end{align}
+For the Fourier series $D(m) = \int_0^{2\pi} D(\phi_0) \mathrm{e}^{-\mathrm{j} m \phi_0}\mathrm{d}\phi_0$, we realize the multiplication of two $\phi_0$-dependent functions, i.e. $w(\mathbf{x}_0)$ and one of the exp-terms. If we would know the Fourier series of the individual functions, we could derive the final results by convolution of the Fourier series in $m$-domain. This sounds like a nice idea, it is however very unlikely that we can derive the convolution result as analytic equation.
 
-For the Fourier series
-$D[m] = \int_0^{2\pi} D(\mathbf{x}_0,\omega) \mathrm{e}^{-\mathrm{j} m \phi_0}\mathrm{d}\phi_0$, according to Ahrens book, we realize the multiplication of two $\phi_0$-dependent functions, i.e. $w(\mathbf{x}_0)$ and one of the exp-terms. If we would know the Fourier series of the single functions we could derive the final results as convolution of the Fourier series. This sounds like a nice idea.
-
-So, the Fourier series of the first exp-function would be
-
+Anyway, the Fourier series of the first exp-function in \eqref{eq:DPWWFS_FSPrep2} would be
 \begin{align}
 \frac{1}{2\pi}\int_0^{2\pi}
 \mathrm{e}^{+\mathrm{j}[(\phi_0-\phi_{PW})-\frac{\omega}{c} r_0
 \cos(\phi_0-\phi_{PW})]}
 \e^{- \im m \phi_0 } \fsd \phi_0
 \end{align}
-
-Nara's idea: with $\theta=\phi_0-\phi_{PW}$, $\fsd \theta / \fsd \phi_0 = 1$
+With $\theta=\phi_0-\phi_{PW}$, $\fsd \theta / \fsd \phi_0 = 1$ we can write
+\begin{calc}
+\ExCalcCol{
 \begin{align}
 \frac{1}{2\pi}\int_0^{2\pi}
 \mathrm{e}^{+\mathrm{j}[\theta-\frac{\omega}{c} r_0
@@ -831,6 +844,8 @@ Nara's idea: with $\theta=\phi_0-\phi_{PW}$, $\fsd \theta / \fsd \phi_0 = 1$
 \cos\theta]}
 \fsd \theta
 \end{align}
+}
+\end{calc}
 \begin{align}
 \frac{1}{2\pi}
 \e^{- \im m \phi_{PW}} 
@@ -839,7 +854,7 @@ Nara's idea: with $\theta=\phi_0-\phi_{PW}$, $\fsd \theta / \fsd \phi_0 = 1$
 \cos\theta]}
 \fsd \theta
 \end{align}
-Similarly, the Fourier series of the second exp-function would be
+Similarly, the Fourier series of the second exp-function in \eqref{eq:DPWWFS_FSPrep2} would be
 \begin{align}
 \frac{1}{2\pi}
 \int_0^{2\pi}
@@ -847,6 +862,8 @@ Similarly, the Fourier series of the second exp-function would be
 \cos(\phi_0-\phi_{PW})]}
 \e^{- \im m \phi_0 } \fsd \phi_0
 \end{align}
+\begin{calc}
+\ExCalcCol{
 \begin{align}
 \frac{1}{2\pi}
 \int_0^{2\pi}
@@ -862,6 +879,8 @@ Similarly, the Fourier series of the second exp-function would be
 \cos\theta]}
 \e^{- \im m \theta} \fsd \theta
 \end{align}
+}
+\end{calc}
 \begin{align}
 \frac{1}{2\pi}
 \e^{- \im m \phi_{PW}}
@@ -870,7 +889,7 @@ Similarly, the Fourier series of the second exp-function would be
 \cos\theta]}
 \fsd \theta
 \end{align}
-Both integrals combined with the factor $1/2$ yield the Fourier series analysis
+Both integrals combined with the factor $1/2$ yield the Fourier series analysis for the plane wave specific part
 \begin{align}
 \frac{1}{2\pi}
 \frac{1}{2}
@@ -940,14 +959,13 @@ Again with NIST 10.9.2
 \int_0^{2\pi} \cos(b\theta) \mathrm{e}^{\mathrm{j} z \cos\theta} \fsd \theta = 
 2 J_{b}(z) \frac{\pi}{\im^{-b}}
 \end{align}
-Combining both cosine results together prefactor yields
+Combining both cosine integral results together with prefactor yields
 \begin{align}
 \frac{1}{2\pi}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
 (2 J_{a}(z) \frac{\pi}{\im^{-a}} + 2 J_{b}(z) \frac{\pi}{\im^{-b}})
-\end{align}
-\begin{align}
+=
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
 (J_{a}(z) \frac{1}{\im^{-a}} + J_{b}(z) \frac{1}{\im^{-b}})
@@ -958,12 +976,16 @@ With $J_a(z) = (-1)^a J_a(-z)$ we get
 \e^{- \im m \phi_{PW}}
 ((-1)^a J_{a}(-z) \frac{1}{\im^{-a}} + (-1)^b J_{b}(-z) \frac{1}{\im^{-b}})
 \end{align}
-reinsert $a=-(m-1)$, $b=-(m+1)$ and $z=-\frac{\omega}{c} r_0 $ 
+Re-substituting $a=-(m-1)$, $b=-(m+1)$ and $z=-\frac{\omega}{c} r_0 $
+\begin{calc}
+\ExCalcCol{
 \begin{align}
 \frac{1}{2}
 \e^{- \im m \phi_{PW}}
 ((-1)^{-(m-1)} J_{-(m-1)}(\frac{\omega}{c} r_0) \frac{1}{\im^{m-1}} + (-1)^{-(m+1)} J_{-(m+1)}(\frac{\omega}{c} r_0) \frac{1}{\im^{m+1}})
 \end{align}
+}
+\end{calc}
 \begin{align}
 \frac{1}{2 \im^m}
 \e^{- \im m \phi_{PW}}
@@ -975,13 +997,68 @@ with $J_{-n} = (-1)^n J_n$
 \e^{- \im m \phi_{PW}}
 ((-1)^{-(m-1)} (-1)^{+(m-1)} J_{m-1}(\frac{\omega}{c} r_0) \frac{1}{\im^{-1}} + (-1)^{-(m+1)} (-1)^{+(m+1)} J_{m+1}(\frac{\omega}{c} r_0) \frac{1}{\im^{+1}})
 \end{align}
-This is what we want to get:
+This yields to where we want to get (cf.  \cite[Table 1]{Hahn2016AES})
 \begin{align}
 \frac{\e^{- \im m \phi_{PW}}}{2\,\im^{m-1}}
 (J_{m-1}(\frac{\omega}{c} r_0) - J_{m+1}(\frac{\omega}{c} r_0))
 \end{align}
-Note the similarity to \cite[Table 1]{Hahn2016AES}. 
+The Fourier analysis of the plane wave part in \eqref{eq:DPWWFS_FSPrep1} is thus derived as
+\begin{align}
+\frac{1}{2 \pi}
+\int\limits_0^{2 \pi}
+\cos(\phi_0-\phi_{PW})
+\, \mathrm{e}^{- \mathrm{j} \frac{\omega}{c} r_0
+\cos(\phi_0-\phi_{PW})} \cdot \e^{- \im m \phi_0 } \fsd \phi_0 
+= \frac{\e^{- \im m \phi_{PW}}}{2\,\im^{m-1}}
+(J_{m-1}(\frac{\omega}{c} r_0) - J_{m+1}(\frac{\omega}{c} r_0))
+\end{align}
+and is generally complex-valued. For $\phi_{PW}=\pi/2$ and $\phi_{PW}=3\pi/2$  the series seems to be only imaginary.
 
+The Fourier series of the spatial window $w(\vec{x}_0)$
+\begin{equation}
+w(\vec{x}_0) =
+    \begin{cases}
+      1 & \text{if}\qquad
+       \unitn(\vec{x}_0) \cdot \hat{\vec{k}}_{PW}(\vec{x}_0) \geq 0 \\
+      0 & \text{otherwise}
+    \end{cases}.
+\end{equation}
+can be written as
+\begin{align}
+\frac{1}{2 \pi}& \int\limits_{\phi_{PW}+\pi/2}^{\phi_{PW}+3\pi/2} \e^{- \im m \phi_0 } \fsd \phi_0 =
+\frac{1}{2 \pi} \frac{1}{-\im m} \e^{- \im m \phi_0 }\bigg|_{\phi_{PW}+\pi/2}^{\phi_{PW}+3\pi/2} =\\
+\frac{1}{2 \pi}& \frac{1}{-\im m} (\e^{- \im m (\phi_{PW}+3\pi/2)) } - \e^{- \im m (\phi_{PW}+\pi/2))})=
+\frac{1}{2 \pi} \frac{\im}{m} (\e^{- \im m (\phi_{PW}+3\pi/2)) } - \e^{- \im m (\phi_{PW}+\pi/2))})=\\
+\frac{1}{2 \pi}& \frac{-\im}{m} (\e^{- \im m (\phi_{PW}+\pi/2))}-\e^{- \im m (\phi_{PW}+3\pi/2)) }),
+\end{align}
+thus the Fourier analysis of the spatial truncation window is
+\begin{align}
+\frac{1}{2 \pi}
+\int\limits_0^{2 \pi} w(\vec{x}_0) \cdot \e^{- \im m \phi_0 } \fsd \phi_0 = \frac{1}{2 \pi}& \frac{-\im}{m} (\e^{- \im m (\phi_{PW}+\pi/2))}-\e^{- \im m (\phi_{PW}+3\pi/2)) })
+\end{align}
+and in general complex valued. For the special case $\phi_{PW} = \pi$ we obtain
+\begin{align}
+\frac{1}{2 \pi} \frac{-\im}{m} (\e^{- \im m \frac{3 \pi}{2}}-\e^{- \im m \frac{5 \pi}{2} }) =
+\frac{1}{2 \pi} \frac{-\im}{m} (\e^{+ \im m \frac{\pi}{2}}-\e^{- \im m \frac{\pi}{2} })
+\end{align}
+and further a real-valued sinc()-function characteristics
+\begin{align}
+\frac{1}{\pi} \frac{-\im\im}{m} \frac{\e^{+ \im m \frac{\pi}{2}}-\e^{- \im m \frac{\pi}{2} }}{2 \im} = \frac{1}{2} \frac{\sin(m\frac{\pi}{2})}{m\frac{\pi}{2}}
+\end{align}
+For $\phi_{PW} = 0$, we similarly obtain $-\frac{1}{2} \frac{\sin(m\frac{\pi}{2})}{m\frac{\pi}{2}}$.
+
+The complex-valued convolution of both Fourier series is thus 
+\begin{align}
+\left[\frac{\e^{- \im m \phi_{PW}}}{2\,\im^{m-1}}
+(J_{m-1}(\frac{\omega}{c} r_0) - J_{m+1}(\frac{\omega}{c} r_0))\right]
+*_m
+\left[\frac{1}{2 \pi} \frac{-\im}{m} (\e^{- \im m (\phi_{PW}+\pi/2))}-\e^{- \im m (\phi_{PW}+3\pi/2)) })\right],
+\end{align}
+doubtful to find an analytic expression for the result.
+
+
+\section{Acknowledgment}
+We thank Naha Hahn (github: narahahn) for fruitful discussions and helpful comments on the calculus.
 
 \bibliographystyle{IEEEtranSA.bst}
 \bibliography{literature}

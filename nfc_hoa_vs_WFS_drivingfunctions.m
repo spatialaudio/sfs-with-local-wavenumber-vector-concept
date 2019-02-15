@@ -7,22 +7,25 @@ clear all
 clc
 tic
 
-wavelength = 1;  % in m
-c = 343;  % speed of sound in m/s
-% ### since the simulation works in normalized kr-domain, 'far' is the only
-% factor we need to play with:
-far = 5;  % far factor
+% since the simulation works in normalized kr-domain, we only need to play 
+% with the far factor
+far = 10;
 
+%%
 kr0 = far*pi  % very large for valid far/hf approx
+M = 5*ceil(kr0);  % number of modes
+L = M*4  % number of secondary sources, >=M*2 to avoid spatial aliasing
+
+wavelength = 1;  % in m, value can be set arbitrarily
+c = 343;  % speed of sound in m/s, value can be set arbitrarily
+
 k = 2*pi/wavelength;  % in rad/m
 f =  c/wavelength;  % frequency in Hz
 omega = 2*pi*f;  % rad/s
 r0 = kr0/k;  % radius of spherical/circular array in m
-M = 5*ceil(kr0);  % number of modes
-L = M*4  % number of secondary sources, >=M*2 to avoid spatial aliasing
 
 %%
-% alloc RAM for Fourier series: 
+% alloc RAM for Fourier series:
 D_WFS_FS_numeric = zeros(1, 2*M+1);
 D_HOA_FS_analytic = zeros(1, 2*M+1);
 
@@ -78,12 +81,12 @@ if 1
     D_sin1 = zeros(1, 2*M+1);
     D_sin2 = zeros(1, 2*M+1);
     for m=-M:+M
-       D_sin1(1, m+M+1) = 1i/(2*pi) * ...
-           sum(sin(-(m-1)*(phi_0-phi_pw)) .*...
-           exp(1i*-kr0*cos(phi_0-phi_pw))) * (2*pi)/L;
-       D_sin2(1, m+M+1) = 1i/(2*pi) *...
-           sum(sin(-(m+1)*(phi_0-phi_pw)) .*...
-           exp(1i*-kr0*cos(phi_0-phi_pw))) * (2*pi)/L;   
+        D_sin1(1, m+M+1) = 1i/(2*pi) * ...
+            sum(sin(-(m-1)*(phi_0-phi_pw)) .*...
+            exp(1i*-kr0*cos(phi_0-phi_pw))) * (2*pi)/L;
+        D_sin2(1, m+M+1) = 1i/(2*pi) *...
+            sum(sin(-(m+1)*(phi_0-phi_pw)) .*...
+            exp(1i*-kr0*cos(phi_0-phi_pw))) * (2*pi)/L;
     end
     max(abs(real(D_sin1))),max(abs(imag(D_sin1))),
     max(abs(real(D_sin2))),max(abs(imag(D_sin2)))
@@ -95,22 +98,35 @@ D_WFS_partJ = cos(phi_0-phi_pw) .* exp(-1i*k*r0 .* cos(phi_0-phi_pw));
 D_WFS_partSinc = phi_0*0+1;
 D_WFS_partSinc(L/2+1:end) = 0;  % truncation window
 
-tmp = D_WFS_FS_Sinc_analytic*0;
+%tmp = D_WFS_FS_Sinc_analytic*0;
 
 for m = -M:+M
     D_WFS_FS_J_numeric(1, m+M+1) = 1/(2*pi) *...
         sum(D_WFS_partJ .* exp(-1i*m.*phi_0),2) * (2*pi)/L;
+    
+    D_WFS_FS_J_analytic(1, m+M+1) = exp(-1i*m*phi_pw) / (2*1i^(m-1)) * ...
+        (besselj(m-1,kr0) - besselj(m+1,kr0));
+    
     D_WFS_FS_Sinc_numeric(1, m+M+1) = 1/(2*pi) *...
         sum(D_WFS_partSinc .* exp(-1i*m.*phi_0),2) * (2*pi)/L;
+    
     D_WFS_FS_Sinc_analytic(1, m+M+1) = -1i*(exp(-1i*m*(phi_pw+pi/2)) ...
         - exp(-1i*m*(phi_pw+3*pi/2)))  / m /2/pi;
     if m==0
         D_WFS_FS_Sinc_analytic(1, m+M+1) = +pi /2/pi;
     end
     
-    D_WFS_FS_J_analytic(1, m+M+1) = exp(-1i*m*phi_pw) / (2*1i^(m-1)) * ...
-        (besselj(m-1,kr0) - besselj(m+1,kr0));  % ok!   
-
+    % % for phi_pw=0
+    %D_WFS_FS_Sinc_analytic(1, m+M+1) = -1/2 * sin(m*pi/2) / (m*pi/2);
+    %if m==0
+    %    D_WFS_FS_Sinc_analytic(1, m+M+1) = 1/2;
+    %end
+    
+    % % for phi_pw=pi
+    %D_WFS_FS_Sinc_analytic(1, m+M+1) = 1/2 * sin(m*pi/2) / (m*pi/2);
+    %if m==0
+    %    D_WFS_FS_Sinc_analytic(1, m+M+1) = 1/2;
+    %end
     
 end
 
@@ -119,8 +135,7 @@ ConvFS_Numeric = - sqrt(8*pi*1i*k*x_ref) *...
     conv(D_WFS_FS_J_numeric,D_WFS_FS_Sinc_numeric);
 
 ConvFS_Numeric = - sqrt(8*pi*1i*k*x_ref) *...
-    conv(D_WFS_FS_J_numeric,D_WFS_FS_Sinc_analytic);
-
+    conv(D_WFS_FS_J_analytic,D_WFS_FS_Sinc_analytic);
 
 idxConv = (length(ConvFS_Numeric)-1)/2-M:(length(ConvFS_Numeric)-1)/2+M;
 ConvFS_Numeric = ConvFS_Numeric(idxConv);
