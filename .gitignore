@@ -8,4 +8,5 @@
 *.blg
 nfc_hoa-vs-wfs.pdf
 nfc_hoa-vs-wfs_CylCoord.pdf
-
+sph_bessel*
+sph_hankel*
