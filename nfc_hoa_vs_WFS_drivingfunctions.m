@@ -9,10 +9,10 @@ tic
 
 % since the simulation works in normalized kr-domain, we only need to play 
 % with the far factor
-far = 5;
+far = 10;
 
 %%
-kr0 = 10 %far*pi  % very large for valid far/hf approx
+kr0 = far %far*pi  % very large for valid far/hf approx
 M = 5*ceil(kr0);  % number of modes
 L = M*4  % number of secondary sources, >=M*2 to avoid spatial aliasing
 
