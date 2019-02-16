@@ -1,8 +1,17 @@
-import matplotlib
+# NFC-HOA vs. WFS driving functions equivalence?!
+# https://github.com/spatialaudio/sfs-with-local-wavenumber-vector-concept
+# /blob/master/nfc_hoa_vs_WFS_drivingfunctions.py
+# Frank Schultz, github: fs446
+#
+# inspired from
+# https://github.com/JensAhrens/soundfieldsynthesis/blob/master/Chapter_4
+# /Fig_4_15.m
+
+
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import numpy as np
 from scipy.special import jv, spherical_jn, spherical_yn
-#import sfs
 
 
 
@@ -50,7 +59,7 @@ k = 2*np.pi/wavelength  # in rad/m
 f =  c/wavelength  # frequency in Hz
 omega = 2*np.pi*f  # rad/s
 r0 = kr0/k  # radius of spherical/circular array in m
-phi_start = phi_pw + np.pi/2  # don't change unless you're sure
+phi_start = phi_pw + np.pi/2  # don't change
 phi_0 = phi_start + np.arange(0,L)*2*np.pi/L
 x_0 = r0*np.cos(phi_0)
 y_0 = r0*np.sin(phi_0)
@@ -75,7 +84,7 @@ D_WFS[0, :] = - np.sqrt(8*np.pi*1j*k*x_ref) * np.cos(phi_0-phi_pw) * \
 D_WFS_partJ[0, :] = \
     np.cos(phi_0-phi_pw) * np.exp(-1j*k*r0 * np.cos(phi_0-phi_pw))
 D_WFS[0, int(L/2):] = 0  # sec src sel = spatial window
-D_WFS_partSinc[0, int(L/2):] = 0  # truncation window
+D_WFS_partSinc[0, int(L/2):] = 0  # sec src sel = spatial window
 
 for m in ma:
     D_WFS_FS_numeric[0, m+M] = \
@@ -86,6 +95,7 @@ for m in ma:
 # normalize
 # TBD check how we get this offset between both approaches:
 D_HOA_FS_analytic = D_HOA_FS_analytic / np.sqrt(2)
+# also check the overall +3dB level in FS domain
 
 for m in ma:
     D_WFS_FS_J_numeric[0, m+M] = \
@@ -110,84 +120,89 @@ ConvFS_Numeric = - np.sqrt(8*np.pi*1j*k*x_ref) * \
                  np.convolve(D_WFS_FS_J_analytic[0,:],
                              D_WFS_FS_Sinc_analytic[0,:], mode="same")
 
-m = np.arange(-M,M+1) / np.ceil(kr0)
+m = np.arange(-M,M+1) / np.ceil(kr0)  # we plot over normalized m
+norm_val = np.max(np.abs(D_HOA_FS_analytic[0,:]))
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 2)
 fig.set_figheight(10)
 fig.set_figwidth(10)
 
-ax1[0].plot(m,D_HOA_FS_analytic[0,:].real, label="HOA analytic", color="C0")
-ax1[0].plot(m,D_WFS_FS_numeric[0,:].real, label="WFS numeric", color="C1")
-ax1[0].plot(m,ConvFS_Numeric.real, ":", label="WFS numeric conv", color="C3")
+
+ax1[0].plot(m,D_HOA_FS_analytic[0,:].real/norm_val, label="HOA analytic", color="C0")
+ax1[0].plot(m,D_WFS_FS_numeric[0,:].real/norm_val, label="WFS numeric", color="C1")
+ax1[0].plot(m,ConvFS_Numeric.real/norm_val, ":", color="C3")
 ax1[0].set_xlim(-3, +3)
-ax1[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax1[0].set_ylabel(r"Real(D(m))")
+# ax1[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax1[0].set_ylabel(r"Real(D(m)) / max |D$_{HOA}$(m)|")
 ax1[0].legend(loc="lower left")
 ax1[0].grid(True)
 
-ax1[1].plot(m,D_HOA_FS_analytic[0,:].imag, label="HOA analytic", color="C0")
-ax1[1].plot(m,D_WFS_FS_numeric[0,:].imag, label="WFS numeric", color="C1")
-ax1[1].plot(m,ConvFS_Numeric.imag, ":", label="WFS numeric conv", color="C3")
+ax1[1].plot(m,D_HOA_FS_analytic[0,:].imag/norm_val, label="HOA analytic", color="C0")
+ax1[1].plot(m,D_WFS_FS_numeric[0,:].imag/norm_val, label="WFS numeric", color="C1")
+ax1[1].plot(m,ConvFS_Numeric.imag/norm_val, ":", color="C3")
 ax1[1].set_xlim(-3, +3)
-ax1[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax1[1].set_ylabel(r"Imag(D(m))")
+# ax1[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax1[1].set_ylabel(r"Imag(D(m))  / max |D$_{HOA}$(m)|")
 ax1[1].legend(loc="lower left")
 ax1[1].grid(True)
 
 
-
-ax2[0].plot(m,np.abs(D_HOA_FS_analytic[0,:]), label="HOA analytic", color="C0")
-ax2[0].plot(m,np.abs(D_WFS_FS_numeric[0,:]), label="WFS numeric", color="C1")
-ax2[0].plot(m,np.abs(ConvFS_Numeric), ":", label="WFS numeric conv",
-            color="C3")
+ax2[0].plot(m,np.abs(D_HOA_FS_analytic[0,:]/norm_val), label="HOA analytic", color="C0")
+ax2[0].plot(m,np.abs(D_WFS_FS_numeric[0,:]/norm_val), label="WFS numeric", color="C1")
+ax2[0].plot(m,np.abs(ConvFS_Numeric/norm_val), ":", color="C3")
 ax2[0].set_xlim(-3, +3)
-ax2[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax2[0].set_ylabel(r"|D(m)|")
+# ax2[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax2[0].set_ylabel(r"|D(m)|  / max |D$_{HOA}$(m)|")
 ax2[0].legend(loc="lower left")
 ax2[0].grid(True)
+ax2[0].text(-2.8, 0.9, ''.join(['phiPW=', str(phi_pw*180/np.pi), 'deg']))
+ax2[0].text(-2.8, 0.7, ''.join(['kr0=', str(kr0)]))
 
-ax2[1].plot(m,20*np.log10(np.abs(D_HOA_FS_analytic[0,:])), label="HOA "
-                                                                 "analytic",
-            color="C0")
-ax2[1].plot(m,20*np.log10(np.abs(D_WFS_FS_numeric[0,:])), label="WFS "
-                                                                "numeric",
-            color="C1")
-ax2[1].plot(m,20*np.log10(np.abs(ConvFS_Numeric)), ":", label="WFS numeric "
-                                                              "conv",
-            color="C3")
+ax2[1].plot(m,20*np.log10(np.abs(D_HOA_FS_analytic[0,:]/norm_val)),
+            label="HOA analytic", color="C0")
+ax2[1].plot(m,20*np.log10(np.abs(D_WFS_FS_numeric[0,:]/norm_val)),
+            label="WFS numeric", color="C1")
+ax2[1].plot(m,20*np.log10(np.abs(ConvFS_Numeric/norm_val)), ":", color="C3")
 ax2[1].set_xlim(-3, +3)
 ax2[1].set_ylim(-100, 20)
-ax2[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax2[1].set_ylabel(r"20 lg |D(m)| / dB")
-ax2[1].legend(loc="best")
+# ax2[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax2[1].set_ylabel(r"20 lg |D(m)| / dB$_{\mathrm{rel}}$")
+ax2[1].legend(loc="lower left")
 ax2[1].grid(True)
+ax2[1].text(-2.75, 10 , "evanescent")
+ax2[1].text(+1.25, 10 , "evanescent")
+rect_evanl = patches.Rectangle((-3,-100),2,120,linewidth=1,edgecolor='gray',
+                         facecolor='gray', alpha=0.2)
+rect_evanr = patches.Rectangle((1,-100),2,120,linewidth=1,edgecolor='gray',
+                         facecolor='gray', alpha=0.2)
+ax2[1].add_patch(rect_evanl)
+ax2[1].add_patch(rect_evanr)
 
 
-
-ax3[0].plot(m,D_WFS_FS_J_numeric[0,:].real, label=(r"Re($J_{m-1}-J_{m+1}$)"))
-ax3[0].plot(m,1+D_WFS_FS_Sinc_numeric[0,:].real, label=(r"Re(Sinc)+1"))
-ax3[0].plot(m,D_WFS_FS_J_analytic[0,:].real,":")
-ax3[0].plot(m,1+D_WFS_FS_Sinc_analytic[0,:].real,":")
+ax3[0].plot(m,1+D_WFS_FS_J_numeric[0,:].real/norm_val,
+            color="C0", label=(r"Re($J_{m-1}-J_{m+1}$), off 1"))
+ax3[0].plot(m,D_WFS_FS_Sinc_numeric[0,:].real/norm_val,
+            color="C1", label=(r"Re(Sinc)"))
+ax3[0].plot(m,1+D_WFS_FS_J_analytic[0,:].real/norm_val,":", color="C2", )
+ax3[0].plot(m,D_WFS_FS_Sinc_analytic[0,:].real/norm_val,":", color="C3", )
 ax3[0].set_xlim(-3, +3)
 ax3[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax3[0].set_ylabel(r"D$_{WFS}$(m)")
+ax3[0].set_ylabel(r"D$_{WFS}$(m) / max |D$_{HOA}$(m)|")
 ax3[0].legend(loc="best")
 ax3[0].grid(True)
 
-ax3[1].plot(m,D_WFS_FS_J_numeric[0,:].imag, label=(r"Imag($J_{m-1}-J_{m+1}$)"))
-ax3[1].plot(m,1+D_WFS_FS_Sinc_numeric[0,:].imag, label=(r"Imag(Sinc)+1"))
-ax3[1].plot(m,D_WFS_FS_J_analytic[0,:].imag,":")
-ax3[1].plot(m,1+D_WFS_FS_Sinc_analytic[0,:].imag,":")
+ax3[1].plot(m,1+D_WFS_FS_J_numeric[0,:].imag/norm_val,
+            color="C0", label=(r"Imag($J_{m-1}-J_{m+1}$), off 1"))
+ax3[1].plot(m,D_WFS_FS_Sinc_numeric[0,:].imag/norm_val,
+            color="C1", label=(r"Imag(Sinc)"))
+ax3[1].plot(m,1+D_WFS_FS_J_analytic[0,:].imag/norm_val,":", color="C2")
+ax3[1].plot(m,D_WFS_FS_Sinc_analytic[0,:].imag/norm_val,":", color="C3")
 ax3[1].set_xlim(-3, +3)
 ax3[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax3[1].set_ylabel(r"D$_{WFS}$(m)")
+ax3[1].set_ylabel(r"D$_{WFS}$(m) / max |D$_{HOA}$(m)|")
 ax3[1].legend(loc="best")
 ax3[1].grid(True)
 
 #plt.show()
-plt.savefig('nfc_hoa_vs_WFS_drivingfunctions_plot.pdf', dpi=72,
-            bbox_inches='tight')
-
-
-
-
+plt.savefig('nfc_hoa_vs_WFS_drivingfunctions_plot.pdf',
+            dpi=300, bbox_inches='tight')

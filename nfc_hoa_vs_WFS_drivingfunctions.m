@@ -1,7 +1,11 @@
 % NFC-HOA vs. WFS driving functions equivalence?!
+% https://github.com/spatialaudio/sfs-with-local-wavenumber-vector-concept
+% /blob/master/nfc_hoa_vs_WFS_drivingfunctions.py
+% Frank Schultz, github: fs446
+%
 % inspired from
-% https://github.com/JensAhrens/soundfieldsynthesis/blob/master/Chapter_4/Fig_4_15.m
-% Frank Schultz, github: fs446, 2019-02-14
+% https://github.com/JensAhrens/soundfieldsynthesis/blob/master/Chapter_4
+% /Fig_4_15.m
 
 clear all
 clc
@@ -144,86 +148,88 @@ ConvFS_Numeric = ConvFS_Numeric(idxConv);
 % get plots HOA analytic vs. WFS numeric
 m = (-M:+M) / ceil(kr0);  % we plot over normalized m
 
+norm_val = max(abs(D_HOA_FS_analytic));
+
+
 subplot(321)
-plot(m, real(D_HOA_FS_analytic)), hold on
-plot(m, real(D_WFS_FS_numeric))
-plot(m, real(ConvFS_Numeric))
+plot(m, real(D_HOA_FS_analytic/norm_val)), hold on
+plot(m, real(D_WFS_FS_numeric/norm_val))
+plot(m, real(ConvFS_Numeric/norm_val))
 
 hold off
 xlim([-3 +3])
 xlabel("m / \lceil kr0 \rceil, discrete m!")
-ylabel("Re(D(m))")
+ylabel("Re(D(m)) / max |D_{HOA}(m)|")
 legend('HOA analytic', 'WFS numeric', 'Conv numeric')
 grid on
 
 
 subplot(322)
-plot(m, imag(D_HOA_FS_analytic)), hold on
-plot(m, imag(D_WFS_FS_numeric))
-plot(m, imag(ConvFS_Numeric))
+plot(m, imag(D_HOA_FS_analytic/norm_val)), hold on
+plot(m, imag(D_WFS_FS_numeric/norm_val))
+plot(m, imag(ConvFS_Numeric/norm_val))
 
 hold off
 xlim([-3 +3])
 xlabel("m / \lceil kr0 \rceil, discrete m!")
-ylabel("Im(D(m))")
+ylabel("Im(D(m)) / max |D_{HOA}(m)|")
 grid on
 
 
 subplot(323)
-plot(m, abs(D_HOA_FS_analytic)), hold on
-plot(m, abs(D_WFS_FS_numeric))
-plot(m, abs(ConvFS_Numeric))
+plot(m, abs(D_HOA_FS_analytic/norm_val)), hold on
+plot(m, abs(D_WFS_FS_numeric/norm_val))
+plot(m, abs(ConvFS_Numeric/norm_val))
 
 hold off
 xlim([-3 +3])
 xlabel("m / \lceil kr0 \rceil, discrete m!")
-ylabel("|D(m)|")
+ylabel("|D(m)| / max |D_{HOA}(m)|")
 title(['m=0 -> WFS: ', num2str(D_WFS_FS_numeric(M+1)), ...
     ',   HOA: ', num2str(D_HOA_FS_analytic(M+1))])
 grid on
 
 
 subplot(324)
-plot(m, db(D_HOA_FS_analytic)), hold on
-plot(m, db(D_WFS_FS_numeric))
-plot(m, db(ConvFS_Numeric))
+plot(m, db(D_HOA_FS_analytic/norm_val)), hold on
+plot(m, db(D_WFS_FS_numeric/norm_val))
+plot(m, db(ConvFS_Numeric/norm_val))
 
 hold off
 xlim([-3 +3])
 ylim([-100 20])
 xlabel("m / \lceil kr0 \rceil, discrete m!")
-ylabel("|D(m)| / dB")
+ylabel("|D(m)| / dB_{rel}")
 grid on
 
 
 subplot(325)
-plot(m,1+real(D_WFS_FS_Sinc_analytic),'LineWidth',2), hold on
-plot(m,real(D_WFS_FS_J_analytic),'LineWidth',2)
-plot(m,1+real(D_WFS_FS_Sinc_numeric))
-plot(m,real(D_WFS_FS_J_numeric))
-
+plot(m,1+real(D_WFS_FS_J_analytic)/norm_val,'LineWidth',2), hold on
+plot(m,real(D_WFS_FS_Sinc_analytic)/norm_val,'LineWidth',2)
+plot(m,1+real(D_WFS_FS_J_numeric)/norm_val,':')
+plot(m,real(D_WFS_FS_Sinc_numeric)/norm_val,':')
 
 hold off
 xlim([-3 +3])
 xlabel("m / \lceil kr0 \rceil, discrete m!")
-ylabel(" D_{WFS}(m)")
-title(['\phi_{PW}=', num2str(phi_pw*180/pi), ' deg'])
-legend('Re(Sinc) + 1', 'Re(J_{m-1}-J_{m+1})')
+ylabel(" D_{WFS}(m) / max |D_{HOA}(m)|")
+title(['\phi_{PW}=', num2str(phi_pw*180/pi), ' deg, kr0=', num2str(kr0)])
+legend('Re(J_{m-1}-J_{m+1}), off 1', 'Re(Sinc)','Location','SouthEast')
 grid on
 
 
 subplot(326)
-plot(m,1+imag(D_WFS_FS_Sinc_analytic),'LineWidth',2), hold on
-plot(m,1+imag(D_WFS_FS_Sinc_numeric))
-plot(m,imag(D_WFS_FS_J_analytic),'LineWidth',2)
-plot(m,imag(D_WFS_FS_J_numeric))
+plot(m,1+imag(D_WFS_FS_J_analytic)/norm_val,'LineWidth',2), hold on
+plot(m,imag(D_WFS_FS_Sinc_analytic)/norm_val,'LineWidth',2)
+plot(m,1+imag(D_WFS_FS_J_numeric)/norm_val,':')
+plot(m,imag(D_WFS_FS_Sinc_numeric)/norm_val,':')
 
 hold off
 xlim([-3 +3])
 xlabel("m / \lceil kr0 \rceil, discrete m!")
-ylabel(" D_{WFS}(m)")
-title(['\phi_{PW}=', num2str(phi_pw*180/pi), ' deg'])
-legend('Im(Sinc) + 1', 'Im(J_{m-1}-J_{m+1})')
+ylabel(" D_{WFS}(m) / max |D_{HOA}(m)|")
+title(['\phi_{PW}=', num2str(phi_pw*180/pi), ' deg, kr0=', num2str(kr0)])
+legend('Im(J_{m-1}-J_{m+1}), off 1', 'Im(Sinc)','Location','SouthEast')
 grid on
 
 %%
