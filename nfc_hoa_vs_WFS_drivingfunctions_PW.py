@@ -44,7 +44,7 @@ def spherical_hn2(n, z):
 print("plane wave")
 # since the simulation works in normalized kr-domain, we only need to play
 # with the far factor
-far  = 10
+far  = 20
 # and the plane wave propagating direction
 phi_pw = 4*np.pi/4
 
@@ -64,7 +64,7 @@ x_0 = r0*np.cos(phi_0)
 y_0 = r0*np.sin(phi_0)
 n_0 = [-x_0/r0, -y_0/r0]
 k_pw = [np.cos(phi_pw), np.sin(phi_pw)]
-w = (np.dot(k_pw, n_0)>0)*1  # sec src sel
+w = (np.dot(k_pw, n_0)>=0)*1  # sec src sel
 
 
 x_ref = r0 / 2

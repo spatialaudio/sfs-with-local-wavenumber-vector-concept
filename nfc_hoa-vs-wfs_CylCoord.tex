@@ -1002,6 +1002,8 @@ This yields to where we want to get (cf.  \cite[Table 1]{Hahn2016AES})
 \frac{\e^{- \im m \phi_{PW}}}{2\,\im^{m-1}}
 (J_{m-1}(\frac{\omega}{c} r_0) - J_{m+1}(\frac{\omega}{c} r_0))
 \end{align}
+Altough not strictly proven yet, but numerically observed, we can assume that the sine-integrals have zero contribution.
+
 The Fourier analysis of the plane wave part in \eqref{eq:DPWWFS_FSPrep1} is thus derived as
 \begin{align}
 \frac{1}{2 \pi}
@@ -1047,12 +1049,23 @@ and further a real-valued sinc()-function characteristics
 \end{align}
 For $\phi_{PW} = 0$, we similarly obtain $-\frac{1}{2} \frac{\sin(m\frac{\pi}{2})}{m\frac{\pi}{2}}$.
 
-The complex-valued convolution of both Fourier series is thus 
+%The complex-valued convolution of both Fourier series is thus 
+%\begin{align}
+%\left[\frac{\e^{- \im m \phi_{PW}}}{2\,\im^{m-1}}
+%(J_{m-1}(\frac{\omega}{c} r_0) - J_{m+1}(\frac{\omega}{c} r_0))\right]
+%*_m
+%\left[\frac{1}{2 \pi} \frac{-\im}{m} (\e^{- \im m (\phi_{PW}+\pi/2))}-\e^{- \im m (\phi_{PW}+3\pi/2)) })\right],
+%\end{align}
+%doubtful to find an analytic expression for the result.
+
+The complex-valued convolution of both Fourier series together with the prefactors, i.e. the final Fourier series result, is thus 
 \begin{align}
-\left[\frac{\e^{- \im m \phi_{PW}}}{2\,\im^{m-1}}
+D_{PW,WFS}(m,\omega) = 
+-\sqrt{\frac{\mathrm{j \omega}}{c}} \sqrt{8 \pi r_0} \cdot
+&\left[\frac{\mathrm{e}^{- \mathrm{j} m \phi_{PW}}}{2\,\mathrm{j}^{m-1}}
 (J_{m-1}(\frac{\omega}{c} r_0) - J_{m+1}(\frac{\omega}{c} r_0))\right]
-*_m
-\left[\frac{1}{2 \pi} \frac{-\im}{m} (\e^{- \im m (\phi_{PW}+\pi/2))}-\e^{- \im m (\phi_{PW}+3\pi/2)) })\right],
+*_m \\
+&\left[\frac{1}{2 \pi} \frac{-\mathrm{i}}{m} (\mathrm{e}^{- \mathrm{i} m (\phi_{PW}+\pi/2))}-\mathrm{e}^{- \mathrm{i} m (\phi_{PW}+3\pi/2)) })\right]
 \end{align}
 doubtful to find an analytic expression for the result.
 

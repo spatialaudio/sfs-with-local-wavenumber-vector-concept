@@ -44,6 +44,11 @@ def spherical_hn2(n, z):
 print("point source")
 # since the simulation works in normalized kr-domain, we only need to play
 # with the far factor
+
+#TBD: check this prefactors and the analytic solution of Sinc and Jm-1 / Jm+1
+#it seems to be not completely wrong, however we have a missing dependency
+#of krs and kr0, sign mismatch and normalize mismatch
+#re-check with AES140th Hahn et. al
 far_r0 = 20
 normfac = 0.86
 
@@ -66,13 +71,12 @@ far_r0 = 31.4159
 normfac = 1
 
 
-far_r0 = 10
-normfac = 0.6283
+far_r0 = 20
+normfac = 0.86
 
-
-far_ps = 1000
+far_ps = 1000*np.pi
 # and the point source position angle
-phi_ps = 2*np.pi/4
+phi_ps = 4*np.pi/4
 
 
 
@@ -101,7 +105,7 @@ x_ps[1,0] = np.sin(phi_ps)*rs
 k_ps = ( x0 - x_ps ) / np.linalg.norm(x0-x_ps, axis=0)
 xoxref = np.linalg.norm(x0 - x_ref, axis=0)
 xoxps = np.linalg.norm(x0 - x_ps, axis=0)
-w =  ((k_ps * n_0).sum(axis=0)>0)*1  # sec src sel
+w =  ((k_ps * n_0).sum(axis=0)>=0)*1  # sec src sel
 
 print(w)
 
@@ -140,6 +144,9 @@ D_HOA_FS_analytic = D_HOA_FS_analytic / np.sqrt(2*np.pi)
 # also check the overall +20dB level in FS domain
 
 phi0_active_idx = np.where(w)[0]  # get active sources index
+
+print(phi_0[phi0_active_idx[0]]*180/np.pi, phi_0[phi0_active_idx[
+    -1]]*180/np.pi)
 
 for m in ma:
     D_WFS_FS_J_numeric[0, m+M] = \
