@@ -46,7 +46,7 @@ print("plane wave")
 # with the far factor
 far  = 20
 # and the plane wave propagating direction
-phi_pw = 0*np.pi/4
+phi_pw = 4*np.pi/4
 
 
 
@@ -86,7 +86,7 @@ D_WFS_partJ[0, :] =  - np.sqrt(1j*k*x_ref) * np.cos(phi_0-phi_pw) * \
                      np.exp(-1j*k*r0 * np.cos(phi_0-phi_pw))
 # normalize to obtain 0dB in FS domain
 # check in comparison to point source and here
-D_WFS_partJ[0, :] =  D_WFS_partJ[0, :]  / np.sqrt(2)  # !?!?
+D_WFS_partJ[0, :] =  1 / np.sqrt(2) * D_WFS_partJ[0, :]  # !?!?
 
 D_WFS[0, :] = np.sqrt(8*np.pi) * D_WFS_partSinc[0, :] * D_WFS_partJ[0, :]
 
@@ -120,7 +120,7 @@ for m in ma:
 
 # normalize to obtain 0dB in FS domain
 # check in comparison to point source and here
-D_WFS_FS_J_analytic[0,:] = D_WFS_FS_J_analytic[0,:]  / np.sqrt(2)  # !?!?
+D_WFS_FS_J_analytic[0,:] = 1 / np.sqrt(2) * D_WFS_FS_J_analytic[0,:]  # !?!?
 
 
 
