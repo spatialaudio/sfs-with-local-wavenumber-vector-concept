@@ -44,7 +44,7 @@ def spherical_hn2(n, z):
 print("plane wave")
 # since the simulation works in normalized kr-domain, we only need to play
 # with the far factor
-far  = 200
+far  = 20
 # and the plane wave propagating direction
 phi_pw = -1*np.pi/4
 
@@ -171,6 +171,13 @@ ax3[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
 ax3[0].set_ylabel(r"|D(m)|")
 ax3[0].legend(loc="lower left")
 ax3[0].grid(True)
+rect_evanl = patches.Rectangle((-3,-100),2,120,linewidth=1,edgecolor='gray',
+                         facecolor='gray', alpha=0.2)
+rect_evanr = patches.Rectangle((1,-100),2,120,linewidth=1,edgecolor='gray',
+                         facecolor='gray', alpha=0.2)
+ax3[0].add_patch(rect_evanl)
+ax3[0].add_patch(rect_evanr)
+
 
 ax3[1].plot(m,20*np.log10(np.abs(D_HOA_FS_analytic[0,:])),
             label="HOA analytic", color="C0")
@@ -185,6 +192,7 @@ ax3[1].legend(loc="lower left")
 ax3[1].grid(True)
 ax3[1].text(-2.75, 10 , "evanescent")
 ax3[1].text(+1.25, 10 , "evanescent")
+ax3[1].text(-0.75, 10 , "propagating")
 ax3[1].text(-2.8, -10, ''.join(['phiPW = ', str(phi_pw*180/np.pi), ' deg']))
 ax3[1].text(-2.8, -30, ''.join(['kr0 = ', str(kr0)]))
 rect_evanl = patches.Rectangle((-3,-100),2,120,linewidth=1,edgecolor='gray',
@@ -196,9 +204,9 @@ ax3[1].add_patch(rect_evanr)
 
 
 ax1[0].plot(m,0+D_WFS_FS_J_numeric[0,:].real,
-            color="C0", label=(r"Re(D(m))/ ($8\pi$)"))
+            color="C0", label=(r"Real(D(m))/ ($8\pi$)"))
 ax1[0].plot(m,D_WFS_FS_Sinc_numeric[0,:].real,
-            color="C1", label=(r"Re(window(m))"))
+            color="C1", label=(r"Real(window(m))"))
 ax1[0].plot(m,0+D_WFS_FS_J_analytic[0,:].real,":", color="C2", )
 ax1[0].plot(m,D_WFS_FS_Sinc_analytic[0,:].real,":", color="C3", )
 ax1[0].set_xlim(-3, +3)
@@ -208,9 +216,9 @@ ax1[0].legend(loc="best")
 ax1[0].grid(True)
 
 ax1[1].plot(m,0+D_WFS_FS_J_numeric[0,:].imag,
-            color="C0", label=(r"Im(D(m))/ ($8\pi$)"))
+            color="C0", label=(r"Imag(D(m))/ ($8\pi$)"))
 ax1[1].plot(m,D_WFS_FS_Sinc_numeric[0,:].imag,
-            color="C1", label=(r"Im(window(m))"))
+            color="C1", label=(r"Imag(window(m))"))
 ax1[1].plot(m,0+D_WFS_FS_J_analytic[0,:].imag,":", color="C2")
 ax1[1].plot(m,D_WFS_FS_Sinc_analytic[0,:].imag,":", color="C3")
 ax1[1].set_xlim(-3, +3)
@@ -244,6 +252,7 @@ ax.legend(loc="lower left")
 ax.grid(True)
 ax.text(-2.75, 10 , "evanescent")
 ax.text(+1.25, 10 , "evanescent")
+ax.text(-0.75, 10 , "propagating")
 ax.text(-2.8, -10, ''.join(['phiPW = ', str(phi_pw*180/np.pi), ' deg']))
 ax.text(-2.8, -30, ''.join(['kr0 = ', str(kr0)]))
 rect_evanl = patches.Rectangle((-3,-100),2,120,linewidth=1,edgecolor='gray',
