@@ -45,14 +45,11 @@ print("point source")
 # since the simulation works in normalized kr-domain, we only need to play
 # with the far factor
 
-#TBD: check this prefactors and the analytic solution of Sinc and Jm-1 / Jm+1
-#it seems to be not completely wrong, however we have a missing dependency
-#of krs and kr0, sign mismatch and normalize mismatch
-#re-check with AES140th Hahn et. al
+
 far_r0 = 20
 far_ps = 1000*np.pi
 # and the point source position angle
-phi_ps = 0*np.pi/4
+phi_ps = -1*np.pi/4
 
 
 
@@ -147,88 +144,95 @@ fig.set_figheight(10)
 fig.set_figwidth(10)
 
 
-ax1[0].plot(m,D_HOA_FS_analytic[0,:].real,
+ax2[0].plot(m,D_HOA_FS_analytic[0,:].real,
             label="HOA analytic", color="C0")
-ax1[0].plot(m,D_WFS_FS_numeric[0,:].real,
+ax2[0].plot(m,D_WFS_FS_numeric[0,:].real,
             label="WFS numeric", color="C1")
-ax1[0].plot(m,ConvFS_Numeric.real, ":", color="C3")
-ax1[0].set_xlim(-3, +3)
-# ax1[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax1[0].set_ylabel(r"Real(D(m))")
-ax1[0].legend(loc="lower left")
-ax1[0].grid(True)
-
-ax1[1].plot(m,D_HOA_FS_analytic[0,:].imag,
-            label="HOA analytic", color="C0")
-ax1[1].plot(m,D_WFS_FS_numeric[0,:].imag,
-            label="WFS numeric", color="C1")
-ax1[1].plot(m,ConvFS_Numeric.imag, ":", color="C3")
-ax1[1].set_xlim(-3, +3)
-# ax1[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax1[1].set_ylabel(r"Imag(D(m))")
-ax1[1].legend(loc="lower left")
-ax1[1].grid(True)
-
-
-ax2[0].plot(m,np.abs(D_HOA_FS_analytic[0,:]),
-            label="HOA analytic", color="C0")
-ax2[0].plot(m,np.abs(D_WFS_FS_numeric[0,:]),
-            label="WFS numeric", color="C1")
-ax2[0].plot(m,np.abs(ConvFS_Numeric), ":", color="C3")
+ax2[0].plot(m,ConvFS_Numeric.real, ":", color="C3")
 ax2[0].set_xlim(-3, +3)
-# ax2[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax2[0].set_ylabel(r"|D(m)|")
+# ax1[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax2[0].set_ylabel(r"Real(D(m))")
 ax2[0].legend(loc="lower left")
 ax2[0].grid(True)
-ax2[0].text(-2.8, 0.9, ''.join(['phiPS=', str(phi_ps*180/np.pi), 'deg']))
-ax2[0].text(-2.8, 0.8, ''.join(['krs=', str(krs)]))
-ax2[0].text(-2.8, 0.7, ''.join(['kr0=', str(kr0)]))
 
-
-ax2[1].plot(m,20*np.log10(np.abs(D_HOA_FS_analytic[0,:])),
+ax2[1].plot(m,D_HOA_FS_analytic[0,:].imag,
             label="HOA analytic", color="C0")
-ax2[1].plot(m,20*np.log10(np.abs(D_WFS_FS_numeric[0,:])),
+ax2[1].plot(m,D_WFS_FS_numeric[0,:].imag,
             label="WFS numeric", color="C1")
-ax2[1].plot(m,20*np.log10(np.abs(ConvFS_Numeric)), ":", color="C3")
+ax2[1].plot(m,ConvFS_Numeric.imag, ":", color="C3")
 ax2[1].set_xlim(-3, +3)
-ax2[1].set_ylim(-100, 20)
-# ax2[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax2[1].set_ylabel(r"20 lg |D(m)| / dB")
+# ax1[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax2[1].set_ylabel(r"Imag(D(m))")
 ax2[1].legend(loc="lower left")
 ax2[1].grid(True)
-ax2[1].text(-2.75, 10 , "evanescent")
-ax2[1].text(+1.25, 10 , "evanescent")
+
+
+ax3[0].plot(m,np.abs(D_HOA_FS_analytic[0,:]),
+            label="HOA analytic", color="C0")
+ax3[0].plot(m,np.abs(D_WFS_FS_numeric[0,:]),
+            label="WFS numeric", color="C1")
+ax3[0].plot(m,np.abs(ConvFS_Numeric), ":", color="C3")
+ax3[0].set_xlim(-3, +3)
+ax3[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax3[0].set_ylabel(r"|D(m)|")
+ax3[0].legend(loc="lower left")
+ax3[0].grid(True)
 rect_evanl = patches.Rectangle((-3,-100),2,120,linewidth=1,edgecolor='gray',
                          facecolor='gray', alpha=0.2)
 rect_evanr = patches.Rectangle((1,-100),2,120,linewidth=1,edgecolor='gray',
                          facecolor='gray', alpha=0.2)
-ax2[1].add_patch(rect_evanl)
-ax2[1].add_patch(rect_evanr)
+ax3[0].add_patch(rect_evanl)
+ax3[0].add_patch(rect_evanr)
 
 
-ax3[0].plot(m,D_WFS_FS_J_numeric[0,:].real,
-            color="C0", label=(r"Re(D(m))/ ($8\pi$)"))
-ax3[0].plot(m,D_WFS_FS_Sinc_numeric[0,:].real,
-            color="C1", label=(r"Re(window(m))"))
-ax3[0].plot(m,D_WFS_FS_J_analytic[0,:].real,":", color="C2", )
-ax3[0].plot(m,D_WFS_FS_Sinc_analytic[0,:].real,":", color="C3", )
-ax3[0].set_xlim(-3, +3)
-ax3[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax3[0].set_ylabel(r"D$_{WFS}$(m)")
-ax3[0].legend(loc="best")
-ax3[0].grid(True)
-
-ax3[1].plot(m,D_WFS_FS_J_numeric[0,:].imag,
-            color="C0", label=(r"Im(D(m))/ ($8\pi$)"))
-ax3[1].plot(m,D_WFS_FS_Sinc_numeric[0,:].imag,
-            color="C1", label=(r"Im(window(m))"))
-ax3[1].plot(m,D_WFS_FS_J_analytic[0,:].imag,":", color="C2")
-ax3[1].plot(m,D_WFS_FS_Sinc_analytic[0,:].imag,":", color="C3")
+ax3[1].plot(m,20*np.log10(np.abs(D_HOA_FS_analytic[0,:])),
+            label="HOA analytic", color="C0")
+ax3[1].plot(m,20*np.log10(np.abs(D_WFS_FS_numeric[0,:])),
+            label="WFS numeric", color="C1")
+ax3[1].plot(m,20*np.log10(np.abs(ConvFS_Numeric)), ":", color="C3")
 ax3[1].set_xlim(-3, +3)
+ax3[1].set_ylim(-100, 20)
 ax3[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
-ax3[1].set_ylabel(r"D$_{WFS}$(m)")
-ax3[1].legend(loc="best")
+ax3[1].set_ylabel(r"20 lg |D(m)| / dB")
+ax3[1].legend(loc="lower left")
 ax3[1].grid(True)
+ax3[1].text(-2.75, 10 , "evanescent")
+ax3[1].text(+1.25, 10 , "evanescent")
+ax3[1].text(-0.75, 10 , "propagating")
+ax3[1].text(-2.8, -10, ''.join(['phiPS=', str(phi_ps*180/np.pi), 'deg']))
+ax3[1].text(-2.8, -20, ''.join(['krs=', str(krs)]))
+ax3[1].text(-2.8, -30, ''.join(['kr0=', str(kr0)]))
+rect_evanl = patches.Rectangle((-3,-100),2,120,linewidth=1,edgecolor='gray',
+                         facecolor='gray', alpha=0.2)
+rect_evanr = patches.Rectangle((1,-100),2,120,linewidth=1,edgecolor='gray',
+                         facecolor='gray', alpha=0.2)
+ax3[1].add_patch(rect_evanl)
+ax3[1].add_patch(rect_evanr)
+
+
+ax1[0].plot(m,D_WFS_FS_J_numeric[0,:].real,
+            color="C0", label=(r"Real(D(m))/ ($8\pi$)"))
+ax1[0].plot(m,D_WFS_FS_Sinc_numeric[0,:].real,
+            color="C1", label=(r"Real(window(m))"))
+ax1[0].plot(m,D_WFS_FS_J_analytic[0,:].real,":", color="C2", )
+ax1[0].plot(m,D_WFS_FS_Sinc_analytic[0,:].real,":", color="C3", )
+ax1[0].set_xlim(-3, +3)
+#ax1[0].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax1[0].set_ylabel(r"D$_{WFS}$(m)")
+ax1[0].legend(loc="best")
+ax1[0].grid(True)
+
+ax1[1].plot(m,D_WFS_FS_J_numeric[0,:].imag,
+            color="C0", label=(r"Imag(D(m))/ ($8\pi$)"))
+ax1[1].plot(m,D_WFS_FS_Sinc_numeric[0,:].imag,
+            color="C1", label=(r"Imag(window(m))"))
+ax1[1].plot(m,D_WFS_FS_J_analytic[0,:].imag,":", color="C2")
+ax1[1].plot(m,D_WFS_FS_Sinc_analytic[0,:].imag,":", color="C3")
+ax1[1].set_xlim(-3, +3)
+#ax1[1].set_xlabel(r"$m \, / \, \lceil k r_0 \rceil$, $m \in \mathrm{Z}$")
+ax1[1].set_ylabel(r"D$_{WFS}$(m)")
+ax1[1].legend(loc="best")
+ax1[1].grid(True)
 
 
 #plt.show()
